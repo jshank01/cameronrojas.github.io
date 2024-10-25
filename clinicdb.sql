@@ -195,6 +195,12 @@ CREATE TABLE Referral(
 	FOREIGN KEY(P_ID) REFERENCES Patient(patient_id)
 		ON DELETE CASCADE ON UPDATE CASCADE
 );
+CREATE TABLE Users (
+    user_id VARCHAR(50) PRIMARY KEY,
+    password VARCHAR(50) NOT NULL,
+    role VARCHAR(20) NOT NULL
+);
+
 CREATE VIEW Doctor_Patient_History_View
 AS SELECT	P.patient_id, P.first_name, P.last_name,
 			H.height, HIST.weight, H.blood_pressure,
