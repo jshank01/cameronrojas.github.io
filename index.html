@@ -62,34 +62,42 @@
 </head>
 <body>
     <div class="login-container">
-        <h1>Clinic Login</h1>
-        <form id="loginForm">
-            <input type="text" id="userId" placeholder="User ID" required>
-            <input type="password" id="password" placeholder="Password" required>
+        <h1>Login</h1>
+        <form id="loginForm" action="/login" method="POST">
+            <label for="userId">User ID:</label>
+            <input type="text" id="userId" name="userId" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
             <button type="submit">Login</button>
         </form>
-        <p id="errorMessage" style="color: red; text-align: center;"></p>
+
+        <div class="new-user">
+            <p>New User? <a href="/register">Create an account</a></p>
+        </div>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form submission
-            const userId = document.getElementById('userId').value;
-            const password = document.getElementById('password').value;
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var userId = document.getElementById('userId').value;
+            var password = document.getElementById('password').value;
 
             fetch('/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ userId, password }),
+                body: JSON.stringify({ userId, password })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    window.location.href = data.redirectUrl; // Redirect to the appropriate page based on the role
+                    window.location.href = data.redirectUrl;
                 } else {
-                    document.getElementById('errorMessage').textContent = data.message;
+                    alert(data.message);
                 }
             });
         });
