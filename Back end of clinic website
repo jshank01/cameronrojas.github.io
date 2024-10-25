@@ -1,0 +1,134 @@
+from flask import Flask, render_template, request, jsonify, redirect, url_for
+import mysql.connector
+from mysql.connector import errorcode
+
+app = Flask(__name__)
+
+# Connect to Azure MySQL Database
+def connect_db():
+    return mysql.connector.connect(
+        host="clinicdb.mysql.database.azure.com",
+        user="admin_user",  # Replace with your Azure MySQL username
+        password="team9db!",  # Replace with your Azure MySQL password
+        database="clinicdb",  # Azure database
+        ssl_ca='/path/to/BaltimoreCyberTrustRoot.crt.pem',
+        ssl_disabled=False
+    )
+
+# Routes
+
+@app.route('/')
+def login_page():
+    return render_template('login.html')
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    user_id = data['userId']
+    password = data['password']
+
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    # Validate user
+    cursor.execute("SELECT role, password FROM Users WHERE user_id = %s", (user_id,))
+    user = cursor.fetchone()
+
+    if user and user[1] == password:
+        role = user[0]
+
+        # Redirect based on role
+        if role == "admin":
+            return jsonify({"success": True, "redirectUrl": url_for('admin_dashboard')})
+        elif role == "doctor":
+            return jsonify({"success": True, "redirectUrl": url_for('doctor_dashboard', user_id=user_id)})
+        elif role == "nurse":
+            return jsonify({"success": True, "redirectUrl": url_for('nurse_dashboard')})
+        elif role == "receptionist":
+            return jsonify({"success": True, "redirectUrl": url_for('receptionist_dashboard')})
+        elif role == "patient":
+            return jsonify({"success": True, "redirectUrl": url_for('patient_dashboard', user_id=user_id)})
+        else:
+            return jsonify({"success": False, "message": "Invalid role."})
+    else:
+        return jsonify({"success": False, "message": "Invalid user ID or password."})
+
+
+# Role-based dashboards
+
+@app.route('/admin')
+def admin_dashboard():
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    # Query the Staff_At_Office view for admin
+    cursor.execute("SELECT * FROM Staff_At_Office")
+    staff_at_office = cursor.fetchall()
+
+    return render_template('admin_dashboard.html', staff_at_office=staff_at_office)
+
+
+@app.route('/doctor/<user_id>')
+def doctor_dashboard(user_id):
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    # Query the Doctor_Patient_History_View for the logged-in doctor
+    query = """
+    SELECT * FROM Doctor_Patient_History_View 
+    WHERE EXISTS (SELECT 1 FROM Patient WHERE Patient.primary_id = %s)
+    """
+    cursor.execute(query, (user_id,))
+    patient_history = cursor.fetchall()
+
+    return render_template('doctor_dashboard.html', patient_history=patient_history)
+
+
+@app.route('/nurse')
+def nurse_dashboard():
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    # Query any data related to nurse functions if needed
+    # Example: nurse_patient_view
+
+    return render_template('nurse_dashboard.html')
+
+
+@app.route('/receptionist')
+def receptionist_dashboard():
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    # Query the Outstanding_Bills and Paid_Bills views
+    cursor.execute("SELECT * FROM Outstanding_Bills")
+    outstanding_bills = cursor.fetchall()
+
+    cursor.execute("SELECT * FROM Paid_Bills")
+    paid_bills = cursor.fetchall()
+
+    return render_template('receptionist_dashboard.html', outstanding_bills=outstanding_bills, paid_bills=paid_bills)
+
+
+@app.route('/patient/<user_id>')
+def patient_dashboard(user_id):
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    # Query the Doctor_Patient_History_View for the logged-in patient
+    query = """
+    SELECT * FROM Doctor_Patient_History_View 
+    WHERE P_ID = %s
+    """
+    cursor.execute(query, (user_id,))
+    patient_history = cursor.fetchall()
+
+    # Query the Outstanding_Bills view for the logged-in patient
+    cursor.execute("SELECT * FROM Outstanding_Bills WHERE P_ID = %s", (user_id,))
+    outstanding_bills = cursor.fetchall()
+
+    return render_template('patient_dashboard.html', patient_history=patient_history, outstanding_bills=outstanding_bills)
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host="0.0.0.0", port=5000)  # Global IP address
