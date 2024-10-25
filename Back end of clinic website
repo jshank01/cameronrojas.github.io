@@ -8,7 +8,7 @@ app = Flask(__name__)
 def connect_db():
     return mysql.connector.connect(
         host="clinicdb.mysql.database.azure.com",
-        user="admin_user",  # Replace with your Azure MySQL username
+        user="clinicdb",  # Replace with your Azure MySQL username
         password="team9db!",  # Replace with your Azure MySQL password
         database="clinicdb",  # Azure database
         ssl_ca='/path/to/BaltimoreCyberTrustRoot.crt.pem',
