@@ -1,12 +1,3 @@
-<!--<html>
-
-<body>
-	<h1>Cameron Rojas</h1>
-	<p>Welcome to my website!</p>
-	<img src="https://content.codecademy.com/articles/github-pages-via-web-app/happy-ice-cream.gif">
-</body>-->
-
-</html>*/
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,6 +49,19 @@
         .login-container button:hover {
             background-color: #0056b3;
         }
+
+        .new-user {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .new-user button {
+            background-color: #28a745; /* Green color for new user button */
+        }
+
+        .new-user button:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
     </style>
 </head>
 <body>
@@ -74,7 +78,7 @@
         </form>
 
         <div class="new-user">
-            <p>New User? <a href="/register">Create an account</a></p>
+            <button onclick="location.href='/register'">New User</button>
         </div>
     </div>
 
