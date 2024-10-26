@@ -1,0 +1,96 @@
+/* General page setup */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #e1bee7); /* Soft gradient background */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    margin: 0;
+    padding-top: 100px; /* Offset for fixed navbar */
+    color: #333;
+}
+
+/* Navbar styling */
+.navbar {
+    background: rgba(255, 255, 255, 0.8); /* Glassmorphic style with transparency */
+    backdrop-filter: blur(10px); /* Background blur for a frosted effect */
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: fixed;
+    top: 10px; /* Slightly off the top for a floating effect */
+    width: 90%; /* Centered and slightly inset from edges */
+    max-width: 1200px; /* Limits width on large screens */
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+}
+
+.navbar a {
+    color: #333333;
+    font-weight: 600;
+    padding: 12px 20px;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 5px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.navbar a:hover {
+    background-color: rgba(33, 150, 243, 0.1); /* Subtle blue hover effect */
+    color: #2196f3; /* Blue text on hover */
+}
+
+/* Page header styling */
+h1 {
+    font-size: 32px;
+    color: #333;
+    text-align: center;
+    margin-top: 20px;
+    background: -webkit-linear-gradient(45deg, #2196f3, #673ab7); /* Gradient text */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Dashboard container styling */
+.dashboard {
+    background: rgba(255, 255, 255, 0.9); /* Light background with transparency */
+    backdrop-filter: blur(8px); /* Slight blur for glassmorphic effect */
+    border-radius: 15px;
+    padding: 40px;
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    margin: 20px auto;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Button styling */
+button {
+    margin-top: 20px;
+    padding: 12px 24px;
+    background: linear-gradient(45deg, #2196f3, #673ab7); /* Vibrant gradient */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background: linear-gradient(45deg, #42a5f5, #7e57c2); /* Lighter gradient on hover */
+    transform: translateY(-2px); /* Slight lift on hover */
+}
+
+/* Content styling */
+.content p {
+    color: #444;
+    font-size: 18px;
+    line-height: 1.6;
+}
