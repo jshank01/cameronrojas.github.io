@@ -165,9 +165,9 @@ CREATE TABLE Billing (
     FOREIGN KEY(P_ID) REFERENCES patient(patient_id)
 		ON DELETE RESTRICT ON UPDATE CASCADE, -- restrict the delete because need to keep track of billing
 	FOREIGN KEY (D_ID) REFERENCES Doctor(employee_ssn)
-		ON DELETE RESTRICT ON UPDATE CASCADE -- restrict because need to know how much to charge b4 the doctor is deleted
+		ON DELETE RESTRICT ON UPDATE CASCADE -- restrict because need to know how much to charge before the doctor is deleted
 );
-CREATE TABLE Payment( -- need to seperate payment and billing bc patient can pay multiple times for the same charge and can have multiple charges paid at once
+CREATE TABLE Payment( -- need to seperate payment and billing because patient can pay multiple times for the same charge and can have multiple charges paid at once
 	P_ID INT NOT NULL,
     total_paid INT,
     pay_date DATETIME NOT NULL, 
@@ -265,9 +265,31 @@ BEGIN
         END IF;
     END IF;
 END; //
+
+DELIMITER //
+CREATE TRIGGER Appointment_Reminders
+-- The trigger will begin when an appointment is added
+AFTER INSERT ON Appointment
+FOR EACH ROW
+BEGIN
+    -- Calculate the 1-day and 2-hour reminder times
+    DECLARE reminder_date_1day DATETIME;
+    DECLARE reminder_date_2hour DATETIME;
+
+    SET reminder_date_1day = DATE_SUB(NEW.app_date, INTERVAL 1 DAY);
+    SET reminder_date_2hour = TIMESTAMPADD(HOUR, -2, CONCAT(NEW.app_date, ' ', NEW.app_start_time));
+
+    -- Insert logic to notify the patient (or log the reminders if needed)
+    INSERT INTO Logs (log_message, log_time)  -- Example log for debugging
+    VALUES (CONCAT('Reminder set for 1 day before appointment on ', reminder_date_1day), NOW());
+
+    INSERT INTO Logs (log_message, log_time)  -- Log for 2-hour reminder
+    VALUES (CONCAT('Reminder set for 2 hours before appointment on ', reminder_date_2hour), NOW());
+END; //
 DELIMITER ;
 
 DELIMITER //
+<<<<<<< Updated upstream
 CREATE TRIGGER Appointment_Reminders
 AFTER INSERT ON Appointment
 FOR EACH ROW
@@ -291,6 +313,10 @@ DELIMITER ;
 DELIMITER //
 CREATE EVENT Send_Reminders
 ON SCHEDULE EVERY 1 HOUR 
+=======
+CREATE EVENT Send_Reminders
+ON SCHEDULE EVERY 1 HOUR  -- Adjust based on your needs
+>>>>>>> Stashed changes
 DO
 BEGIN
     -- Send the 1-day reminders
@@ -314,12 +340,24 @@ BEGIN
 END; //
 DELIMITER ;
 
+<<<<<<< Updated upstream
  -- Table created for debugging. Make sure the reminders are sending.
+=======
+;
+
+-- Testing the appointment_Reminder by storing the reminders in a log table. This table is not required, only using for debugging.
+>>>>>>> Stashed changes
 CREATE TABLE Logs (
     log_id INT AUTO_INCREMENT PRIMARY KEY,
     log_message VARCHAR(255),
     log_time DATETIME
 );
+<<<<<<< Updated upstream
+=======
+
+
+
+>>>>>>> Stashed changes
 -- 2 triggers will be the appointment reminder & referral trigger
 -- create view for the receptionist to see all of patients bills and payments, create view for doctor to see all patients med history combined.
 -- create view where receptionist can see current appts for specific doctor
