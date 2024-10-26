@@ -266,6 +266,60 @@ BEGIN
     END IF;
 END; //
 DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER Appointment_Reminders
+AFTER INSERT ON Appointment
+FOR EACH ROW
+BEGIN
+    -- Calculate the 1-day and 2-hour reminder times
+    DECLARE reminder_date_1day DATETIME;
+    DECLARE reminder_date_2hour DATETIME;
+
+    SET reminder_date_1day = DATE_SUB(NEW.app_date, INTERVAL 1 DAY);
+    SET reminder_date_2hour = TIMESTAMPADD(HOUR, -2, CONCAT(NEW.app_date, ' ', NEW.app_start_time));
+
+    -- Insert logic to notify the patient (or log the reminders if needed)
+    INSERT INTO Logs (log_message, log_time)  -- Example log for debugging
+    VALUES (CONCAT('Reminder set for 1 day before appointment on ', reminder_date_1day), NOW());
+
+    INSERT INTO Logs (log_message, log_time)  -- Log for 2-hour reminder
+    VALUES (CONCAT('Reminder set for 2 hours before appointment on ', reminder_date_2hour), NOW());
+END; //
+DELIMITER ;
+
+DELIMITER //
+CREATE EVENT Send_Reminders
+ON SCHEDULE EVERY 1 HOUR 
+DO
+BEGIN
+    -- Send the 1-day reminders
+    SELECT 
+        P.phone_number, 
+        CONCAT('Reminder: Your appointment is tomorrow at ', A.app_start_time) AS message
+    FROM Appointment A
+    JOIN Patient P ON A.P_ID = P.patient_id
+    WHERE A.app_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+      AND CURTIME() BETWEEN '00:00:00' AND '01:00:00'; -- Run within the first hour
+
+    -- Send the 2-hour reminders
+    SELECT 
+        P.phone_number, 
+        CONCAT('Reminder: Your appointment is in 2 hours at ', A.app_start_time) AS message
+    FROM Appointment A
+    JOIN Patient P ON A.P_ID = P.patient_id
+    WHERE CONCAT(A.app_date, ' ', A.app_start_time) = TIMESTAMPADD(HOUR, 2, NOW());
+
+    -- Optional: Add logic to interface with external services like Twilio for SMS
+END; //
+DELIMITER ;
+
+ -- Table created for debugging. Make sure the reminders are sending.
+CREATE TABLE Logs (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    log_message VARCHAR(255),
+    log_time DATETIME
+);
 -- 2 triggers will be the appointment reminder & referral trigger
 -- create view for the receptionist to see all of patients bills and payments, create view for doctor to see all patients med history combined.
 -- create view where receptionist can see current appts for specific doctor
