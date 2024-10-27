@@ -47,5 +47,14 @@
     {% if error %}
     <p style="color: red;">{{ error }}</p>
     {% endif %}
+    // Script to alert if there's no referral for a specialist appointment
+function checkReferral() {
+    // Simulate checking for a referral and display an alert if none found
+    const hasReferral = {{ referral_exists | tojson }};  // Assume `referral_exists` is passed to template
+    if (!hasReferral) {
+        alert('Cannot book appointment: No referral for specialist.');
+    }
+}
+
 </body>
 </html>
