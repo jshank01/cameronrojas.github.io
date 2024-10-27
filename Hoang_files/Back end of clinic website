@@ -42,8 +42,8 @@ def login():
             return jsonify({"success": True, "redirectUrl": url_for('admin_dashboard')})
         elif role == "doctor":
             return jsonify({"success": True, "redirectUrl": url_for('doctor_dashboard', user_id=user_id)})
-        elif role == "nurse":
-            return jsonify({"success": True, "redirectUrl": url_for('nurse_dashboard')})
+       <!-- elif role == "nurse":
+            return jsonify({"success": True, "redirectUrl": url_for('nurse_dashboard')})-->
         elif role == "receptionist":
             return jsonify({"success": True, "redirectUrl": url_for('receptionist_dashboard')})
         elif role == "patient":
@@ -65,7 +65,7 @@ def admin_dashboard():
     cursor.execute("SELECT * FROM Staff_At_Office")
     staff_at_office = cursor.fetchall()
 
-    return render_template('admin_dashboard.html', staff_at_office=staff_at_office)
+    return render_template('admin.html', staff_at_office=staff_at_office)
 
 
 @app.route('/doctor/<user_id>')
@@ -81,7 +81,7 @@ def doctor_dashboard(user_id):
     cursor.execute(query, (user_id,))
     patient_history = cursor.fetchall()
 
-    return render_template('doctor_dashboard.html', patient_history=patient_history)
+    return render_template('doc.html', patient_history=patient_history)
 
 
 @app.route('/nurse')
@@ -122,11 +122,11 @@ def receptionist_dashboard():
             """, (patient_info['patient_id'],))
             appointments = cursor.fetchall()
 
-            return render_template('receptionist_dashboard.html', patient_info=patient_info, appointments=appointments)
+            return render_template('receptionist.html', patient_info=patient_info, appointments=appointments)
         else:
-            return render_template('receptionist_dashboard.html', error="No patient found with that information.")
+            return render_template('receptionist.html', error="No patient found with that information.")
     else:
-        return render_template('receptionist_dashboard.html')
+        return render_template('receptionist.html')
 
 
 # Patient view and appointment setup
@@ -173,7 +173,7 @@ def patient_dashboard(user_id):
             referral_exists = cursor.fetchone()[0]
 
             if referral_exists == 0:
-                return render_template('patient_dashboard.html', patient_info=patient_info, appointments=appointments, error="You need an approved referral to book an appointment with a specialist.")
+                return render_template('patient.html', patient_info=patient_info, appointments=appointments, error="You need an approved referral to book an appointment with a specialist.")
 
         # Insert new appointment
         cursor.execute("""
@@ -184,7 +184,7 @@ def patient_dashboard(user_id):
 
         return redirect(url_for('patient_dashboard', user_id=user_id))
 
-    return render_template('patient_dashboard.html', patient_info=patient_info, appointments=appointments)
+    return render_template('patient.html', patient_info=patient_info, appointments=appointments)
 
 
     # Query the Doctor_Patient_History_View for the logged-in patient
@@ -199,7 +199,7 @@ def patient_dashboard(user_id):
     cursor.execute("SELECT * FROM Outstanding_Bills WHERE P_ID = %s", (user_id,))
     outstanding_bills = cursor.fetchall()
 
-    return render_template('patient_dashboard.html', patient_history=patient_history, outstanding_bills=outstanding_bills)
+    return render_template('patient.html', patient_history=patient_history, outstanding_bills=outstanding_bills)
 
 
 if __name__ == '__main__':
