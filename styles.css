@@ -1,14 +1,15 @@
 /* General page setup */
-body {
+html {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #e0f7fa, #e1bee7); /* Soft gradient background */
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    height: 100vh;
-    margin: 0;
-    padding-top: 100px; /* Offset for fixed navbar */
     color: #333;
+    min-height: 100%; /* Ensures full page coverage */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: transparent; /* Ensures body doesn’t override html background */
 }
 
 /* Navbar styling */
@@ -44,33 +45,86 @@ body {
 }
 
 /* Page header styling */
-h1 {
-    font-size: 32px;
-    color: #333;
+.header {
     text-align: center;
-    margin-top: 20px;
-    background: -webkit-linear-gradient(45deg, #2196f3, #673ab7); /* Gradient text */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    padding: 40px 20px;
+    background-color: #e3f2fd;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 60px;
 }
 
-/* Dashboard container styling */
+.header h1 {
+    font-size: 36px;
+    color: #2196f3;
+    margin-bottom: 10px;
+}
+
+.header p {
+    font-size: 18px;
+    color: #666;
+}
+
+/* Main Content */
+.main-content {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+/* Dashboard styling */
 .dashboard {
     background: rgba(255, 255, 255, 0.9); /* Light background with transparency */
     backdrop-filter: blur(8px); /* Slight blur for glassmorphic effect */
     border-radius: 15px;
     padding: 40px;
     width: 90%;
-    max-width: 800px;
+    max-width: 800px; /* Limit width for central alignment */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
-    margin: 20px auto;
+    margin: 60px auto; /* Centered on the page */
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Button styling */
-button {
-    margin-top: 20px;
+/* Sections within main content */
+.login-container, .services, .contact-info, .reviews {
+    background-color: #ffffff;
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.login-container h2, .services h2, .contact-info h2, .reviews h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+form label {
+    font-size: 18px;
+    color: #555;
+}
+
+form input {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+form button {
     padding: 12px 24px;
     background: linear-gradient(45deg, #2196f3, #673ab7); /* Vibrant gradient */
     color: white;
@@ -83,14 +137,60 @@ button {
     transition: background 0.3s ease, transform 0.2s ease;
 }
 
-button:hover {
+form button:hover {
     background: linear-gradient(45deg, #42a5f5, #7e57c2); /* Lighter gradient on hover */
     transform: translateY(-2px); /* Slight lift on hover */
 }
 
-/* Content styling */
-.content p {
-    color: #444;
+/* Services and Contact Sections */
+.services ul {
+    list-style: none;
+    padding: 0;
+    color: #555;
+}
+
+.services li, .contact-info p, .reviews blockquote {
     font-size: 18px;
     line-height: 1.6;
+    text-align: center;
+}
+
+/* Button styling */
+button {
+    padding: 12px 24px;
+    background: linear-gradient(45deg, #2196f3, #673ab7);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background: linear-gradient(45deg, #42a5f5, #7e57c2);
+    transform: translateY(-2px);
+}
+
+/* Footer Styling */
+.footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #e0e0e0;
+    color: #555;
+    margin-top: 40px;
+}
+
+.footer .footer-links a {
+    color: #2196f3;
+    margin: 0 10px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer p {
+    font-size: 14px;
+    color: #555;
 }
