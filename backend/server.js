@@ -4,32 +4,22 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
 
+// Enable CORS for all routes
+app.use(cors());
+
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
-// Serve frontend static files
-const path = require('path');
-app.use(express.static(path.join(__dirname, '../frontend')));
+// Import and use only the login route file
+const loginRoutes = require('./routerFiles/loginRoute'); // Handles login route
 
-// Serve frontend static files
-app.use(express.static(path.join(__dirname, '../frontend')));
-
-// Import and use route files
-const appointmentRoutes = require('./routerFiles/appointment');
-const billingRoutes = require('./routerFiles/billing');
-const patientRoutes = require('./routerFiles/patient');
-const loginRoutes = require('./routerFiles/login');
-const adminRoutes = require('./routerFiles/admin');
-
-app.use('/api/appointment', appointmentRoutes);
-app.use('/api/billing', billingRoutes);
-app.use('/api/patient', patientRoutes);
-app.use('/login', loginRoutes);
-app.use('/api/employee', adminRoutes);
+// Use the login route
+app.use('/login', loginRoutes); // Adds login route for authentication
 
 // Start server
 const PORT = process.env.PORT || 3000;

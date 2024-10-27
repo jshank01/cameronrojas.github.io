@@ -1,6 +1,6 @@
 // Database Connection
 
-require('../dotenv').config();
+require('dotenv').config();
 
 const mysql = require('mysql2/promise');
 
