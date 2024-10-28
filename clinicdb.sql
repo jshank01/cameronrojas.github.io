@@ -132,10 +132,11 @@ CREATE TABLE Med_History(
 );
 CREATE TABLE Doctor (
     employee_ssn VARCHAR(9) PRIMARY KEY NOT NULL,
-    Admin_ssn VARCHAR(11),
+    username VARCHAR(50) UNIQUE NOT NULL,
+    Admin_ssn VARCHAR(9),
     first_name VARCHAR(50),
     last_name VARCHAR(50),
-    hire_date VARCHAR(10),
+    hire_date DATE,
     salary INT,
     office_id INT,
     specialty VARCHAR(25),
@@ -143,6 +144,8 @@ CREATE TABLE Doctor (
     cost INT,
     FOREIGN KEY (office_id) REFERENCES Office(office_id)
 		ON DELETE SET NULL ON UPDATE CASCADE,
+	FOREIGN KEY (username) REFERENCES Users(username)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (Admin_ssn) REFERENCES Admin(employee_ssn)
 		ON DELETE SET NULL ON UPDATE CASCADE
 );
@@ -152,7 +155,7 @@ CREATE TABLE Nurse (
     Admin_ssn VARCHAR(11),
     first_name VARCHAR(50),
     last_name VARCHAR(50),
-    hire_date VARCHAR(10),
+    hire_date DATE,
     salary INT,
     office_id INT,
     FOREIGN KEY (office_id) REFERENCES Office(office_id)
@@ -165,7 +168,7 @@ CREATE TABLE Receptionist (
     Admin_ssn VARCHAR(11),
     first_name VARCHAR(50),
     last_name VARCHAR(50),
-    hire_date VARCHAR(10),
+    hire_date DATE,
     salary INT,
     office_id INT,
     FOREIGN KEY (office_id) REFERENCES Office(office_id)
@@ -189,7 +192,7 @@ CREATE TABLE Admin (
     employee_ssn VARCHAR(9) PRIMARY KEY,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
-    hire_date VARCHAR(10),
+    hire_date DATE,
     salary INT,
     office_id INT,
     FOREIGN KEY (office_id) REFERENCES Office(office_id)
@@ -197,32 +200,11 @@ CREATE TABLE Admin (
 );
 
 CREATE TABLE Users (
-    user_id INT,
     username VARCHAR(50) PRIMARY KEY NOT NULL,
-    password VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL UNIQUE,
     role enum('patient','doctor','nurse','receptionist','admin') NOT NULL
     -- FOREIGN KEY (user_id) REFERENCES Patient(patient_id)
 );
-
-DELIMITER //
-CREATE PROCEDURE Login ( IN account_username VARCHAR(50), IN account_password VARCHAR(50), OUT login_status BOOL, OUT account_id INT)
-BEGIN
-    DECLARE account_exists INT;
-    DECLARE found_account INT;
-    
-    SELECT COUNT(*), U.user_id
-    INTO account_exists, found_account
-	FROM Users AS U
-    WHERE U.username = account_username AND U.password = account_password;
-    
-    IF account_exists > 0 THEN
-		SET login_status = TRUE;
-        SET account_id = found_account;
-    ELSE
-		SET login_status = FALSE;
-    END IF;
-END //
-DELIMITER ;
 
 CREATE VIEW Doctor_Patient_History_View
 AS SELECT	P.patient_id, P.first_name, P.last_name,
@@ -255,6 +237,28 @@ FROM Patient AS P
 LEFT OUTER JOIN Payment AS PAY ON P.patient_id = PAY.P_ID
 LEFT OUTER JOIN Billing AS B ON P.patient_id = B.P_ID
 WHERE B.paid_off = TRUE;
+
+-- Find the login info in users table, then if found use the username to query the specific role to find the correct user
+DELIMITER //
+CREATE PROCEDURE Login ( IN account_username VARCHAR(50), IN account_password VARCHAR(50), OUT login_status BOOL, OUT account_role VARCHAR(50))
+BEGIN
+    DECLARE account_exists INT;
+    DECLARE found_role VARCHAR(50);
+    
+    SELECT COUNT(*), U.role
+    INTO account_exists, found_role
+	FROM Users AS U
+    WHERE U.username = account_username AND U.password = account_password;
+    
+    IF account_exists > 0 THEN
+		SET login_status = TRUE;
+        SET account_role = found_role;
+    ELSE
+		SET login_status = FALSE;
+        SET account_role = found_role;
+    END IF;
+END //
+DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE Staff_At_Office(IN office_id_input INT)
@@ -423,10 +427,12 @@ CREATE TABLE Logs (
 <<<<<<< Updated upstream
 =======
 
-
-
 >>>>>>> Stashed changes
 -- 2 triggers will be the appointment reminder & referral trigger
 -- create view for the receptionist to see all of patients bills and payments, create view for doctor to see all patients med history combined.
 -- create view where receptionist can see current appts for specific doctor
 -- need to add login info (username, password, security lvl/role)
+INSERT INTO Doctor (employee_ssn, username, Admin_ssn, first_name, last_name, hire_date, salary, office_id, specialty, specialist, cost) 
+VALUES ('123456789','temp_username', '987654321', 'John', 'Doe', '2024-01-15', 150000, 1, 'Cardiology', TRUE, 200);
+INSERT INTO Users(username, password, role) VALUES ('temp_username', 'temp_pass', 'doctor');
+
