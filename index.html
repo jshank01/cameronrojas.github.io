@@ -3,102 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clinic Login</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-image: url('medical-background.jpg'); /* Medical background image */
-            background-size: cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .login-container {
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
-            padding: 20px;
-            border-radius: 10px;
-            width: 300px;
-            box-shadow: 0px 0px 10px 0px #000;
-        }
-
-        .login-container h1 {
-            text-align: center;
-        }
-
-        .login-container input[type="text"], .login-container input[type="password"] {
-            width: 90%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .login-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .login-container button:hover {
-            background-color: #0056b3;
-        }
-
-        .new-user {
-            text-align: center;
-            margin-top: 15px;
-        }
-
-    </style>
+    <title>Welcome to Our Clinic</title>
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
-    <div class="login-container">
-        <h1>Login</h1>
-        <form id="loginForm" action="/login" method="POST">
-            <label for="userId">User ID:</label>
-            <input type="text" id="userId" name="userId" required>
+    <!-- Header Section -->
+    <header class="header">
+        <h1>Welcome to Our Clinic</h1>
+        <p>Your health, our priority. Quality care you can trust.</p>
+    </header>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Login Form -->
+        <section class="login-container">
+            <h2>Patient & Staff Login</h2>
+            <form id="loginForm">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
 
-            <button type="submit">Login</button>
-        </form>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
 
-        <div class="new-user">
-            <p>New Patient? <a href="./register">Create new account</a></p>
+                <button type="submit">Login</button>
+            </form>
+        </section>
+
+        <!-- Services Section -->
+        <section class="services">
+            <h2>Our Services</h2>
+            <ul>
+                <li>General Check-ups</li>
+                <li>Pediatrics</li>
+                <li>Cardiology</li>
+                <li>Dermatology</li>
+                <li>Emergency Care</li>
+                <li>And more...</li>
+            </ul>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-info">
+            <h2>Contact Us</h2>
+            <p>Address: 123 Health St., Wellness City</p>
+            <p>Phone: (123) 456-7890</p>
+            <p>Email: contact@ourclinic.com</p>
+        </section>
+
+        <!-- Patient Reviews -->
+        <section class="reviews">
+            <h2>What Our Patients Say</h2>
+            <blockquote>
+                "The doctors here are top-notch, and the care is excellent!"
+            </blockquote>
+            <blockquote>
+                "Friendly staff and state-of-the-art facilities. Highly recommended!"
+            </blockquote>
+        </section>
+    </main>
+
+    <!-- Footer with Quick Links -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">About Us</a> |
+            <a href="#">Services</a> |
+            <a href="#">Privacy Policy</a> |
+            <a href="#">Contact</a>
         </div>
-    </div>
+        <p>&copy; 2024 Our Clinic. All rights reserved.</p>
+    </footer>
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            var userId = document.getElementById('userId').value;
-            var password = document.getElementById('password').value;
-
-            fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ userId, password })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = data.redirectUrl;
-                } else {
-                    alert(data.message);
-                }
-            });
-        });
-    </script>
+    <!-- Link to JavaScript file -->
+    <script src="../frontend/login.js"></script>
 </body>
 </html>
-

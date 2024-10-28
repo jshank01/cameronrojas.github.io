@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS Users (
 CREATE TABLE Office (
     office_id INT PRIMARY KEY NOT NULL,
     location VARCHAR(128) NOT NULL,
-    admin_id INT,
+    admin_id VARCHAR(9),
     admin_start_date DATE,
     FOREIGN KEY (admin_id) REFERENCES Admin(employee_ssn)
     ON DELETE SET NULL ON UPDATE CASCADE
@@ -25,10 +25,10 @@ CREATE TABLE Appointment(
   app_date DATE NOT NULL,
     P_ID INT NOT NULL,
     app_start_time TIME NOT NULL,
-  app_end_time TIME NOT NULL,
-    D_ID INT NOT NULL,
+	app_end_time TIME NOT NULL,
+    D_ID VARCHAR(9) NOT NULL,
     reason_for_visit VARCHAR(50),
-    referral INT,
+    referral VARCHAR(9),
     need_referral BOOL,
     PRIMARY KEY (P_ID, app_date, app_start_time),
     FOREIGN KEY (D_ID) REFERENCES Doctor(employee_ssn)
@@ -39,8 +39,8 @@ CREATE TABLE Appointment(
     ON DELETE CASCADE ON UPDATE CASCADE
 );
 CREATE TABLE Billing (
-  P_ID INT NOT NULL,
-    D_ID INT,
+	P_ID INT NOT NULL,
+    D_ID VARCHAR(9),
     charge_for VARCHAR(50),
     total_charge INT,
     charge_date DATETIME NOT NULL,
@@ -65,11 +65,11 @@ CREATE TABLE Payment( -- need to seperate payment and billing because patient ca
 );
 
 CREATE TABLE Referral(
-  primary_doc INT NOT NULL,
+	primary_doc VARCHAR(9) NOT NULL,
     P_ID INT NOT NULL,
     ref_date DATETIME NOT NULL,
     experiation DATE NOT NULL,
-    specialist INT NOT NULL,
+    specialist VARCHAR(9) NOT NULL,
     doc_appr BOOL,
     used BOOL,
     PRIMARY KEY (P_ID, ref_date),
@@ -86,7 +86,7 @@ CREATE TABLE Medication (
     end_date DATE,
     dosage VARCHAR(25),
     time_of_day VARCHAR(20),
-    D_ID INT,
+    D_ID VARCHAR(9),
     P_ID INT NOT NULL,
     cost INT,
     PRIMARY KEY (P_ID, medicine),
@@ -163,25 +163,31 @@ CREATE TABLE Doctor (
 
 CREATE TABLE Nurse (
     employee_ssn VARCHAR(9) PRIMARY KEY NOT NULL,
-    Admin_ssn VARCHAR(11),
+    username VARCHAR(50) UNIQUE NOT NULL,
+    Admin_ssn VARCHAR(9),
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     hire_date VARCHAR(10),
     salary INT,
     office_id INT,
+    FOREIGN KEY (username) REFERENCES Users(username)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (office_id) REFERENCES Office(office_id)
     ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (Admin_ssn) REFERENCES Admin(employee_ssn)
     ON DELETE SET NULL ON UPDATE CASCADE
 );
 CREATE TABLE Receptionist (
-  employee_ssn VARCHAR(9) PRIMARY KEY NOT NULL,
-    Admin_ssn VARCHAR(11),
+	employee_ssn VARCHAR(9) PRIMARY KEY NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    Admin_ssn VARCHAR(9),
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     hire_date VARCHAR(10),
     salary INT,
     office_id INT,
+    FOREIGN KEY (username) REFERENCES Users(username)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (office_id) REFERENCES Office(office_id)
     ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (Admin_ssn) REFERENCES Admin(employee_ssn)
@@ -189,23 +195,29 @@ CREATE TABLE Receptionist (
 );
 CREATE TABLE Patient (
     patient_id INT PRIMARY KEY NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     date_of_birth DATE,
     address VARCHAR(128),
     phone_number VARCHAR(10),
-    primary_id INT,
+    primary_id VARCHAR(9),
+    FOREIGN KEY (username) REFERENCES Users(username)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (primary_id) REFERENCES Doctor(employee_ssn)
     ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 CREATE TABLE Admin (
     employee_ssn VARCHAR(9) PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     hire_date VARCHAR(10),
     salary INT,
     office_id INT,
+    FOREIGN KEY (username) REFERENCES Users(username)
+		ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (office_id) REFERENCES Office(office_id)
     ON DELETE SET NULL ON UPDATE CASCADE
 );
@@ -215,28 +227,7 @@ CREATE TABLE Users (
     username VARCHAR(50) PRIMARY KEY NOT NULL,
     password VARCHAR(50) NOT NULL UNIQUE,
     role enum('patient','doctor','nurse','receptionist','admin') NOT NULL
-    -- FOREIGN KEY (user_id) REFERENCES Patient(patient_id)
 );
-
-DELIMITER //
-CREATE PROCEDURE Login ( IN account_username VARCHAR(50), IN account_password VARCHAR(50), OUT login_status BOOL, OUT account_id INT)
-BEGIN
-    DECLARE account_exists INT;
-    DECLARE found_account INT;
-    
-    SELECT COUNT(*), U.user_id
-    INTO account_exists, found_account
-  FROM Users AS U
-    WHERE U.username = account_username AND U.password = account_password;
-    
-    IF account_exists > 0 THEN
-    SET login_status = TRUE;
-        SET account_id = found_account;
-    ELSE
-    SET login_status = FALSE;
-    END IF;
-END //
-DELIMITER ;
 
 CREATE VIEW Doctor_Patient_History_View
 AS SELECT P.patient_id, P.first_name, P.last_name,
@@ -409,4 +400,57 @@ CREATE TABLE Logs (
 -- create view where receptionist can see current appts for specific doctor
 -- need to add login info (username, password, security lvl/role)
 
+-- OFFICE DUMMY INFO
+INSERT INTO Office (office_id, location, admin_id, admin_start_date) 
+VALUES (1, '1010 Main St, Houston, TX', '111111111', '2023-01-15'),
+(2, '2020 West Loop N, Houston, TX', '111111111', '2022-05-22'),
+(3, '3030 Fannin St, Houston, TX', '111111111', '2023-03-10');
+
+-- DOCTOR DUMMY INFO
+INSERT INTO Doctor (employee_ssn, username, Admin_ssn, first_name, last_name, hire_date, salary, office_id, specialty, specialist, cost) 
+VALUES ('123456789','temp_username', '111111111', 'John', 'Doe', '2024-01-15', 150000, 1, 'Cardiology', TRUE, 200),
+('234567890', 'asmith', '111111111', 'Alice', 'Smith', '2023-05-22', 120000, 2, 'Pediatrics', FALSE, 150),
+('345678901', 'bjohnson', '111111111', 'Bob', 'Johnson', '2022-03-15', 145000, 1, 'Family Medicine', FALSE, 150),
+('456789012', 'cwhite', '111111111', 'Charlie', 'White', '2023-08-10', 130000, 3, 'Internal Medicine', FALSE, 200),
+('567890123', 'dlee', '111111111', 'Diana', 'Lee', '2024-02-01', 155000, 2, 'Neurology', TRUE, 300);
+
+-- NURSE DUMMY INFO
+INSERT INTO Nurse (employee_ssn, username, Admin_ssn, first_name, last_name, hire_date, salary, office_id) 
+VALUES ('678901234', 'mgarcia_nurse', '111111111', 'Maria', 'Garcia', '2023-04-10', 75000, 1),
+('789012345', 'kchan_nurse', '111111111', 'Kevin', 'Chan', '2022-11-05', 78000, 2),
+('890123456', 'ljohnson_nurse', '111111111', 'Laura', 'Johnson', '2024-01-25', 70000, 3);
+
+-- RECEPTIONIST DUMMY INFO 
+INSERT INTO Receptionist (employee_ssn, username, Admin_ssn, first_name, last_name, hire_date, salary, office_id) 
+VALUES ('901234567', 'jwilson_rec', '111111111', 'John', 'Wilson', '2023-05-10', 50000, 1),
+('012345678', 'mrodriguez_rec', '111111111', 'Maria', 'Rodriguez', '2022-12-01', 52000, 2),
+('123456780', 'tlee_rec', '111111111', 'Tina', 'Lee', '2024-03-15', 48000, 3);
+
+-- ADMIN DUMMY INFO 
+INSERT INTO Admin (employee_ssn, username, first_name, last_name, hire_date, salary, office_id) 
+VALUES ('111111111', 'big_boss', 'Mr.', 'Boss', '2021-08-15', 175000, 1);
+
+-- PATIENT DUMMY INFO
+INSERT INTO Patient (patient_id, username, first_name, last_name, date_of_birth, address, phone_number, primary_id) 
+VALUES (1, 'kthompson_patient', 'Kyle', 'Thompson', '1995-04-12', '321 Maple St, Houston, TX', '2817894567', '234567890'),
+(2, 'nlee_patient', 'Nancy', 'Lee', '1988-07-22', '654 Cedar St, Houston, TX', '8321114321', '345678901'),
+(3, 'rmartinez_patient', 'Ricardo', 'Martinez', '1993-09-30', '987 Birch St, Houston, TX', '7134551234', '567890123');
+
+-- LOGIN DUMMY INFO
+INSERT INTO Users(username, password, role) 
+VALUES ('temp_username', 'temp_pass', 'doctor'),
+('asmith', 'doctor2', 'doctor'),
+('bjohnson', 'doctor3', 'doctor'),
+('cwhite', 'doctor4', 'doctor'),
+('dlee', 'doctor5', 'doctor'),
+('mgarcia_nurse', 'nurse1', 'nurse'),
+('kchan_nurse', 'nurse2', 'nurse'),
+('ljohnson_nurse', 'nurse3', 'nurse'),
+('jwilson_rec', 'receptionist1', 'receptionist'),
+('mrodriguez_rec', 'receptionist2', 'receptionist'),
+('tlee_rec', 'receptionist3', 'receptionist'),
+('big_boss', 'admin1', 'admin'),
+('kthompson_patient', 'patient1', 'patient'),
+('nlee_patient', 'patient2', 'patient'),
+('rmartinez_patient', 'patient3', 'patient');
 
