@@ -1,4 +1,4 @@
-// register.js - Registration Handling
+// register.js
 
 document.getElementById('registerForm').addEventListener('submit', async (event) => {
     event.preventDefault();

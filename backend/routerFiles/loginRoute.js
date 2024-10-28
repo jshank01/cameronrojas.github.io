@@ -1,4 +1,4 @@
-// loginRoute.js - Enhanced Logging for Debugging
+// loginRoute.js
 
 const express = require('express');
 const router = express.Router();
@@ -6,22 +6,17 @@ const db = require('../db');
 
 router.post('/', async (req, res) => {
     const { username, password } = req.body;
-    console.log("Login attempt with:", req.body);
+    console.log("Login attempt:", req.body);
 
     try {
-        // Check in Employee table
-        console.log("Querying Employee table...");
-        const [employeeRows] = await db.query(
-            'SELECT * FROM Employee WHERE username = ? AND password = ?', 
+        // Check for user in Users table
+        const [userRows] = await db.query(
+            'SELECT * FROM Users WHERE username = ? AND password = ?',
             [username, password]
         );
-        console.log("Employee query result:", employeeRows);
-
-        if (employeeRows.length > 0) {
-            const user = employeeRows[0];
-            console.log("Employee found with role:", user.role);
-
-            // Redirect based on employee role
+        
+        if (userRows.length > 0) {
+            const user = userRows[0];
             let redirectPath = '';
             switch (user.role) {
                 case 'doctor':
@@ -36,33 +31,18 @@ router.post('/', async (req, res) => {
                 case 'admin':
                     redirectPath = '/html/admin.html';
                     break;
+                case 'patient':
+                    redirectPath = '/html/patient.html';
+                    break;
                 default:
                     return res.status(401).json({ message: 'Role not recognized' });
             }
-            console.log("Redirecting to:", redirectPath);
             return res.json({ redirect: redirectPath });
+        } else {
+            res.status(401).json({ message: 'Invalid credentials' });
         }
-
-        // Check in Patient table if not an Employee
-        console.log("Querying Patient table...");
-        const [patientRows] = await db.query(
-            'SELECT * FROM Patient WHERE username = ? AND password = ?', 
-            [username, password]
-        );
-        console.log("Patient query result:", patientRows);
-
-        if (patientRows.length > 0) {
-            const redirectPath = '/html/patient.html';
-            console.log("Redirecting patient to:", redirectPath);
-            return res.json({ redirect: redirectPath });
-        }
-
-        // If no match found
-        console.log("No matching credentials found");
-        res.status(401).json({ message: 'Invalid credentials' });
     } catch (error) {
-        console.error("Detailed error during login attempt:", error.message);
-        console.error("Stack trace:", error.stack); // Logs stack trace for more context
+        console.error("Error during login attempt:", error.message);
         res.status(500).json({ message: 'Server error' });
     }
 });

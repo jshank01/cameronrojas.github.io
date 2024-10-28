@@ -1,4 +1,4 @@
-// registerRoute.js - Handles User Registration
+// registerRoute.js
 
 const express = require('express');
 const router = express.Router();
@@ -11,14 +11,12 @@ router.post('/', async (req, res) => {
     try {
         // Check if the username already exists
         const [existingUser] = await db.query('SELECT * FROM Users WHERE username = ?', [username]);
-
         if (existingUser.length > 0) {
             return res.status(409).json({ message: 'Username already taken' });
         }
 
         // Insert new user into Users table
         await db.query('INSERT INTO Users (username, password, role) VALUES (?, ?, ?)', [username, password, role]);
-        console.log("User registered successfully:", username);
         res.status(201).json({ message: 'Registration successful' });
     } catch (error) {
         console.error("Error during registration:", error.message);
