@@ -1,56 +1,68 @@
-// Login Routing
+// loginRoute.js - Enhanced Logging for Debugging
 
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-router.post('/', async (req, res) => { // Change from '/login' to '/'
-    console.log("Login attempt with:", req.body); // Log the login attempt details
-
-    // Temporary redirect test
-    res.json({ redirect: '/html/admin.html' }); // Return fixed redirect to test if it works
-    return; // Stop further processing
-
+router.post('/', async (req, res) => {
     const { username, password } = req.body;
+    console.log("Login attempt with:", req.body);
 
     try {
         // Check in Employee table
-        const [employeeRows] = await db.query('SELECT * FROM Employee WHERE username = ? AND password = ?', [username, password]);
-        
+        console.log("Querying Employee table...");
+        const [employeeRows] = await db.query(
+            'SELECT * FROM Employee WHERE username = ? AND password = ?', 
+            [username, password]
+        );
+        console.log("Employee query result:", employeeRows);
+
         if (employeeRows.length > 0) {
             const user = employeeRows[0];
-            
+            console.log("Employee found with role:", user.role);
+
             // Redirect based on employee role
+            let redirectPath = '';
             switch (user.role) {
                 case 'doctor':
-                    res.json({ redirect: '/html/doctor.html' });
+                    redirectPath = '/html/doctor.html';
                     break;
                 case 'nurse':
-                    res.json({ redirect: '/html/nurse.html' });
+                    redirectPath = '/html/nurse.html';
                     break;
                 case 'receptionist':
-                    res.json({ redirect: '/html/receptionist.html' });
+                    redirectPath = '/html/receptionist.html';
                     break;
                 case 'admin':
-                    res.json({ redirect: '/html/admin.html' });
+                    redirectPath = '/html/admin.html';
                     break;
                 default:
-                    res.status(401).json({ message: 'Role not recognized' });
+                    return res.status(401).json({ message: 'Role not recognized' });
             }
-            return;
+            console.log("Redirecting to:", redirectPath);
+            return res.json({ redirect: redirectPath });
         }
 
         // Check in Patient table if not an Employee
-        const [patientRows] = await db.query('SELECT * FROM Patient WHERE username = ? AND password = ?', [username, password]);
+        console.log("Querying Patient table...");
+        const [patientRows] = await db.query(
+            'SELECT * FROM Patient WHERE username = ? AND password = ?', 
+            [username, password]
+        );
+        console.log("Patient query result:", patientRows);
+
         if (patientRows.length > 0) {
-            res.json({ redirect: '/html/patient.html' });
-            return;
+            const redirectPath = '/html/patient.html';
+            console.log("Redirecting patient to:", redirectPath);
+            return res.json({ redirect: redirectPath });
         }
 
         // If no match found
+        console.log("No matching credentials found");
         res.status(401).json({ message: 'Invalid credentials' });
     } catch (error) {
-        console.error("Error during login attempt:", error); // Log errors for debugging
+        console.error("Detailed error during login attempt:", error.message);
+        console.error("Stack trace:", error.stack); // Logs stack trace for more context
         res.status(500).json({ message: 'Server error' });
     }
 });
