@@ -1,4 +1,5 @@
-// db.js - Database Connection
+/* db.js - Database Connection: db.js handles the connection to the MySQL database, 
+where the new user’s information is stored in the Users table. */
 
 require('dotenv').config();
 const mysql = require('mysql2/promise');
