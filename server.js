@@ -13,9 +13,9 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Serve static files
-app.use(express.static(path.join(__dirname, 'frontend')));
-app.use(express.static(path.join(__dirname, 'html')));
-app.use(express.static(path.join(__dirname, 'css'))); // If CSS is in a specific folder
+app.use(express.static(path.join(__dirname, 'html'))); // Main HTML files
+app.use(express.static(path.join(__dirname, 'css')));  // CSS in the root directory
+app.use(express.static(path.join(__dirname, 'frontend'))); // JS in the frontend folder
 
 // Import routes
 const db = require('./backend/db');
@@ -30,7 +30,7 @@ app.use('/appointments', appointmentRoute);
 
 // Default route for serving index.html
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'html', 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
