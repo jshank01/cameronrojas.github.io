@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Clinic Login</title>
-  <link rel="stylesheet" href="/styles.css"> <!-- Ensure correct path to CSS -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Website</title>
+    <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <div class="login-container">
-    <h1>Login</h1>
-    <form action="/login" method="POST">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required>
-      
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required>
-      
-      <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="/html/register.html">Register here</a></p> <!-- Ensure correct path to register page -->
-  </div>
+    <div class="navbar">
+        <a href="/">Home</a>
+        <a href="/register.html">Register</a>
+        <a href="/login.html">Login</a>
+    </div>
+
+    <div class="main-content">
+        <h1>Welcome to the Clinic</h1>
+        <p>Your health is our priority.</p>
+    </div>
+
+    <!-- Include JavaScript files if needed -->
+    <script src="/frontend/login.js"></script>
+    <script src="/frontend/register.js"></script>
 </body>
 </html>
