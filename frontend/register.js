@@ -7,7 +7,8 @@ document.getElementById('registerForm').addEventListener('submit', async (event)
     const role = document.getElementById('role').value;
 
     try {
-        const response = await fetch('http://localhost:3000/register', {
+        const response = await fetch('https://clinic-website.azurewebsites.net/register', {
+
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

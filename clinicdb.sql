@@ -372,7 +372,6 @@ END; //
 DELIMITER ;
 
 DELIMITER //
-<<<<<<< Updated upstream
 CREATE TRIGGER Appointment_Reminders
 AFTER INSERT ON Appointment
 FOR EACH ROW
@@ -396,10 +395,6 @@ DELIMITER ;
 DELIMITER //
 CREATE EVENT Send_Reminders
 ON SCHEDULE EVERY 1 HOUR 
-=======
-CREATE EVENT Send_Reminders
-ON SCHEDULE EVERY 1 HOUR  -- Adjust based on your needs
->>>>>>> Stashed changes
 DO
 BEGIN
     -- Send the 1-day reminders
@@ -423,22 +418,12 @@ BEGIN
 END; //
 DELIMITER ;
 
-<<<<<<< Updated upstream
  -- Table created for debugging. Make sure the reminders are sending.
-=======
-;
-
--- Testing the appointment_Reminder by storing the reminders in a log table. This table is not required, only using for debugging.
->>>>>>> Stashed changes
 CREATE TABLE Logs (
     log_id INT AUTO_INCREMENT PRIMARY KEY,
     log_message VARCHAR(255),
     log_time DATETIME
 );
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 -- 2 triggers will be the appointment reminder & referral trigger
 -- create view for the receptionist to see all of patients bills and payments, create view for doctor to see all patients med history combined.
 -- create view where receptionist can see current appts for specific doctor

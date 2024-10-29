@@ -8,7 +8,8 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
     const password = document.getElementById('password').value;
 
     try {
-        const response = await fetch('http://localhost:3000/login', { // Explicitly specify localhost:3000
+        const response = await fetch('https://clinic-website.azurewebsites.net/login', {
+
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
