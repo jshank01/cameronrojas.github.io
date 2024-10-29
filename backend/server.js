@@ -13,10 +13,11 @@ app.use(bodyParser.json());
 // Import routes
 const loginRoutes = require('./routerFiles/loginRoute');
 const registerRoutes = require('./routerFiles/registerRoute');
-
+const appointmentRoutes = require('./routerFiles/appointmentRoute');
 // Use routes
 app.use('/login', loginRoutes);
 app.use('/register', registerRoutes);
+app.use('/register', appointmentRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Dashboard</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="css/patient.css">
 </head>
+O
+
 <body>
     <div class="navbar">
         <a href="admin.html">Admin Dashboard</a>
@@ -15,10 +17,65 @@
         <a href="patient.html">Patient Dashboard</a>
         <a href="index.html">Logout</a>
     </div>
-    <div class="dashboard">
-        <h1>Patient Dashboard</h1>
-        <p>Welcome! Here you can view your medical history, upcoming appointments, and billing information.</p>
-        <button onclick="window.location.href='index.html'">Logout</button>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+          <img src="doctor-icon.png" alt="Patient Icon" class="sidebar-icon" />
+          <h2>James Smith</h2>
+        </div>
+        <ul class="sidebar-menu">
+          <li><i class="fas fa-calendar-alt"></i> Appointments</li>
+          <li><i class="fas fa-calendar-alt"></i> Billing</li>
+          <li><i class="fas fa-envelope"></i> Messages</li>
+        </ul>
+      </div>
+
+    <div class="booking-container">
+
+        <div class="reason-selector">
+            <label for="appointment-reason">Select a Reason:</label>
+            <select id="appointment-reason">
+                <option value="" disabled selected>Select your reason</option>
+                <option value="General Checkup">General Checkup</option>
+                <option value="Follow-up">Follow-up</option>
+                <option value="Consultation">Consultation</option>
+                <option value="Specialist Visit">Specialist Visit</option>
+                <!-- Add more reasons as needed -->
+            </select>
+        </div>
+
+        <div class="date-picker">
+            <label for="appointment-date">Select a Date:</label>
+            <input type="date" id="appointment-date">
+        </div>
+
+        <div class="time-slots">
+            <div class="time-slot">
+                <span>7:00am</span>
+                <button class="book-btn" data-time="07:00:00" data-doctor-id="DOCTOR_ID" data-patient-id="PATIENT_ID" data-reason="General Checkup">Book Now</button>
+            </div>
+            <div class="time-slot">
+                <span>8:00am</span>
+                <button class="book-btn">Book Now</button>
+            </div>
+            <div class="time-slot">
+                <span>9:00am</span>
+                <button class="book-btn">Book Now</button>
+            </div>
+            <div class="time-slot">
+                <span>10:00am</span>
+                <button class="book-btn">Book Now</button>
+            </div>
+            <div class="time-slot">
+                <span>11:00am</span>
+                <button class="book-btn">Book Now</button>
+            </div>
+            <div class="time-slot">
+                <span>12:00pm</span>
+                <button class="book-btn">Book Now</button>
+            </div>
+        </div>
     </div>
+    <script src="frontend/booking.js"></script>
 </body>
 </html>
