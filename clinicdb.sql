@@ -466,7 +466,8 @@ VALUES (1, 'kthompson_patient', 'Kyle', 'Thompson', '1995-04-12', '321 Maple St,
 (3, 'rmartinez_patient', 'Ricardo', 'Martinez', '1993-09-30', '987 Birch St, Houston, TX', '7134551234', '567890123');
 
 -- LOGIN DUMMY INFO
-INSERT INTO Users(username, password, role) 
+INSERT INTO Users(username, password, role) az login
+
 VALUES ('temp_username', 'temp_pass', 'doctor'),
 ('asmith', 'doctor2', 'doctor'),
 ('bjohnson', 'doctor3', 'doctor'),
