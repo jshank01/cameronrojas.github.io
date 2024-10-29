@@ -14,12 +14,12 @@ app.use(bodyParser.json());
 const db = require('./backend/db');
 const loginRoute = require('./backend/routerFiles/loginRoute');
 const registerRoute = require('./backend/routerFiles/registerRoute');
-const appointmentRoutes = require('./routerFiles/appointmentRoute');
+const appointmentRoute = require('./backend/routerFiles/appointmentRoute');
 
 // Use routes
-app.use('/login', loginRoutes);
-app.use('/register', registerRoutes);
-app.use('/register', appointmentRoutes);
+app.use('/login', loginRoute);
+app.use('/register', registerRoute);
+app.use('/appointments', appointmentRoute);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
