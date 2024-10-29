@@ -3,19 +3,6 @@
 -- Create database if it doesn't already exist
 CREATE DATABASE IF NOT EXISTS clinicdb;
 
-USE clinicdb;
-
--- Create Users table for user login and roles
-CREATE TABLE IF NOT EXISTS Users (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(50) NOT NULL,
-    role ENUM('patient', 'doctor', 'nurse', 'receptionist', 'admin') NOT NULL
-);
-
--- Verify that the table was created
-SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'clinicdb';
-
 CREATE TABLE Office (
     office_id INT PRIMARY KEY NOT NULL,
     location VARCHAR(128) NOT NULL,
