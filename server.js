@@ -12,6 +12,12 @@ app.use(helmet()); // Adds security headers
 app.use(cors());
 app.use(bodyParser.json());
 
+// Add Content-Security-Policy header
+app.use((req, res, next) => {
+    res.setHeader("Content-Security-Policy", "default-src 'self'");
+    next();
+});
+
 // Serve static files
 app.use(express.static(path.join(__dirname, 'html'))); // Main HTML files
 app.use(express.static(path.join(__dirname, 'css')));  // CSS in the root directory
