@@ -8,17 +8,39 @@
 </head>
 <body>
     <div class="navbar">
-        <a href="admin.html">Admin Dashboard</a>
+        <a href="../index.html">Home</a> <!-- Updated path for Home link -->
         <a href="doctor.html">Doctor Dashboard</a>
         <a href="nurse.html">Nurse Dashboard</a>
         <a href="receptionist.html">Receptionist Dashboard</a>
         <a href="patient.html">Patient Dashboard</a>
-        <a href="index.html">Logout</a>
+        <a href="../index.html">Logout</a> <!-- Updated path for Logout -->
     </div>
+
     <div class="dashboard">
         <h1>Patient Dashboard</h1>
         <p>Welcome! Here you can view your medical history, upcoming appointments, and billing information.</p>
-        <button onclick="window.location.href='index.html'">Logout</button>
+
+        <!-- Medical History Section -->
+        <section id="medical-history">
+            <h2>Medical History</h2>
+            <div id="medicalHistoryContent"></div>
+        </section>
+
+        <!-- Upcoming Appointments Section -->
+        <section id="upcoming-appointments">
+            <h2>Upcoming Appointments</h2>
+            <div id="appointmentContent"></div>
+        </section>
+
+        <!-- Billing Information Section -->
+        <section id="billing-info">
+            <h2>Billing Information</h2>
+            <div id="billingContent"></div>
+        </section>
+
+        <button onclick="window.location.href='../index.html'">Logout</button> <!-- Updated path for Logout -->
     </div>
+
+    <script src="../frontend/patient.js"></script>
 </body>
 </html>
