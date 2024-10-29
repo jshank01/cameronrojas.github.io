@@ -11,9 +11,11 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Import routes
-const loginRoutes = require('./routerFiles/loginRoute');
-const registerRoutes = require('./routerFiles/registerRoute');
+const db = require('./backend/db');
+const loginRoute = require('./backend/routerFiles/loginRoute');
+const registerRoute = require('./backend/routerFiles/registerRoute');
 const appointmentRoutes = require('./routerFiles/appointmentRoute');
+
 // Use routes
 app.use('/login', loginRoutes);
 app.use('/register', registerRoutes);
