@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v3  # Updated to latest version
+        uses: actions/checkout@v4  # Updated to latest version
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3  # Using v3 to ensure Node compatibility
+        uses: actions/setup-node@v4  # Using v3 to ensure Node compatibility
         with:
           node-version: '20'
 
@@ -37,7 +37,7 @@ jobs:
     needs: build
     steps:
       - name: Check out repository
-        uses: actions/checkout@v3  # Updated to latest version
+        uses: actions/checkout@v4  # Updated to latest version
 
       - name: Download build artifact
         uses: actions/download-artifact@v4  # Updated to latest version
