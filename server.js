@@ -22,8 +22,8 @@ app.use('/html', express.static(path.join(__dirname, 'html')));
 app.use('/frontend', express.static(path.join(__dirname, 'frontend')));
 
 // Import and use backend routes from the 'routerFiles' folder
-const routerFiles = require('./backend/routerFiles'); // Adjust path if needed
-app.use(routerFiles); // assuming routerFiles exports a router
+const loginRoute = require('./backend/routerFiles/loginRoute');
+app.use('/login', loginRoute);
 
 // Optional: Serve other static assets from root if needed (like root-level CSS or JS)
 app.use(express.static(path.join(__dirname)));
