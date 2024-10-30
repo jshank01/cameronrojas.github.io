@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy 
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - clinic-website
+name: Build and Deploy Node.js App to Azure Web App - clinic-website
 
 on:
   push:
@@ -13,47 +13,45 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'  # Update Node.js version to the latest stable version
+          node-version: '20'  # Ensure compatibility with Node.js 20
 
       - name: Install dependencies
         run: npm install
 
       - name: Build project
-        run: npm run build
-
-      - name: Zip build artifacts
-        run: zip -r release.zip .
+        run: npm run build  # Ensure you have a "build" script in your package.json
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # Updated to v4 for compatibility
         with:
           name: release
-          path: release.zip
+          path: path/to/build/output  # Adjust this to your actual build output path (e.g., ./dist or ./build)
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
+      - name: Download artifact
+        uses: actions/download-artifact@v4  # Updated to v4
         with:
           name: release
+          path: ./release.zip
 
       - name: Unzip artifact for deployment
-        run: unzip release.zip
+        run: unzip release.zip -d ./extracted  # Specify extraction directory
 
       - name: Clear GitHub Action Cache
         uses: actions/cache@v3
         with:
-          path: .
+          path: .  # Only clear necessary paths to avoid accidental deletions
           key: ${{ runner.os }}-build-cache
           restore-keys: |
             ${{ runner.os }}-build-cache
@@ -63,5 +61,4 @@ jobs:
         with:
           app-name: 'clinic-website'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: '.'
-          working-directory: './'
+          package: './extracted'  # Use extracted files for deployment
