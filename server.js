@@ -6,9 +6,21 @@ const helmet = require('helmet');
 const express = require('express');
 const path = require('path');
 const app = express();
-app.use(helmet()); // Adds security headers
-app.use(cors());
+
+// Middleware to add security headers
+app.use(helmet());
+
+// Middleware to parse JSON bodies
 app.use(bodyParser.json());
+
+// CORS configuration
+const corsOptions = {
+    origin: 'http://127.0.0.1:5500', // Allows your local frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+};
+app.use(cors(corsOptions));
 
 // Serve the main index.html file from the root directory
 app.get('/', (req, res) => {
