@@ -1,4 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy 
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
 name: Build and deploy Node.js app to Azure Web App - clinic-website
@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  # Updated to latest version
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v3  # Using v3 to ensure Node compatibility
         with:
           node-version: '20'
 
@@ -26,20 +26,23 @@ jobs:
       - name: Run build script (No actual build)
         run: npm run build
 
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4  # Updated to latest version
+        with:
+          name: release
+          path: '.'  # Specify path if there's a specific build directory to deploy
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  # Updated to latest version
 
-      - name: Clear GitHub Action Cache
-        uses: actions/cache@v3
+      - name: Download build artifact
+        uses: actions/download-artifact@v4  # Updated to latest version
         with:
-          path: .  # Only clear necessary paths to avoid accidental deletions
-          key: ${{ runner.os }}-build-cache
-          restore-keys: |
-            ${{ runner.os }}-build-cache
+          name: release
 
       - name: Deploy to Azure Web App using Publish Profile
         uses: azure/webapps-deploy@v3
