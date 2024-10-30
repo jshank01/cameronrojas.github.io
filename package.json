@@ -4,9 +4,9 @@
   "description": "Clinic website application",
   "main": "server.js",
   "scripts": {
-  "start": "node server.js",
-  "build": "echo 'No build step needed'"
-},
+    "start": "node server.js",
+    "build": "echo 'No build step needed'"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
