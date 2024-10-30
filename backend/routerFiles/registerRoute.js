@@ -6,17 +6,22 @@ const db = require('../db');
 
 router.post('/', async (req, res) => {
     const { username, password, role } = req.body;
+    
+    // Log the incoming registration attempt
     console.log("Registration attempt:", req.body);
 
     try {
         // Check if the username already exists
+        console.log("Checking if username already exists:", username);
         const [existingUser] = await db.query('SELECT * FROM Users WHERE username = ?', [username]);
         if (existingUser.length > 0) {
+            console.log("Username already taken:", username);
             return res.status(409).json({ message: 'Username already taken' });
         }
 
         // Insert new user into Users table
         await db.query('INSERT INTO Users (username, password, role) VALUES (?, ?, ?)', [username, password, role]);
+        console.log("Registration successful for:", username);
         res.status(201).json({ message: 'Registration successful' });
     } catch (error) {
         console.error("Error during registration:", error.message);
