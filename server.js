@@ -1,5 +1,6 @@
 // Server.js
 
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const express = require('express');
