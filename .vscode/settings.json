@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/d7bf98cb-6ee5-487c-a254-c76f38602888/resourceGroups/UH_Projects/providers/Microsoft.Web/sites/clinic-website",
+    "appService.deploySubpath": "."
+}

@@ -1,43 +1,32 @@
-// server.js - azure launch
+// Server.js
 
 const express = require('express');
 const path = require('path');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-require('dotenv').config();
-const helmet = require('helmet');
-
 const app = express();
 app.use(helmet()); // Adds security headers
 app.use(cors());
 app.use(bodyParser.json());
 
-// Add Content-Security-Policy header
-app.use((req, res, next) => {
-    res.setHeader("Content-Security-Policy", "default-src 'self'");
-    next();
-});
-
-// Serve static files
-app.use(express.static(path.join(__dirname, 'html'))); // Main HTML files
-app.use(express.static(path.join(__dirname, 'css')));  // CSS in the root directory
-app.use(express.static(path.join(__dirname, 'frontend'))); // JS in the frontend folder
-
-// Import routes
-const db = require('./backend/db');
-const loginRoute = require('./backend/routerFiles/loginRoute');
-const registerRoute = require('./backend/routerFiles/registerRoute');
-const appointmentRoute = require('./backend/routerFiles/appointmentRoute');
-
-// Use routes
-app.use('/login', loginRoute);
-app.use('/register', registerRoute);
-app.use('/appointments', appointmentRoute);
-
-// Default route for serving index.html
+// Serve the main index.html file from the root directory
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'html', 'index.html'));
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Serve static files from the 'html' folder (for any additional HTML files)
+app.use('/html', express.static(path.join(__dirname, 'html')));
+
+// Serve static files from the 'frontend' folder (for client-side JavaScript, CSS, etc.)
+app.use('/frontend', express.static(path.join(__dirname, 'frontend')));
+
+// Import and use backend routes from the 'routerFiles' folder
+const routerFiles = require('./backend/routerFiles'); // Adjust path if needed
+app.use(routerFiles); // assuming routerFiles exports a router
+
+// Optional: Serve other static assets from root if needed (like root-level CSS or JS)
+app.use(express.static(path.join(__dirname)));
+
+// Set the port for Azure or default to 3000
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
