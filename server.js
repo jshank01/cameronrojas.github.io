@@ -6,17 +6,8 @@ const helmet = require('helmet');
 const express = require('express');
 const path = require('path');
 const app = express();
-
-// Define CORS options for finer control
-const corsOptions = {
-    origin: 'http://127.0.0.1:5500', // Allow requests from this specific origin
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed HTTP methods
-    credentials: true, // Allow cookies to be sent
-    allowedHeaders: 'Content-Type,Authorization' // Allowed headers
-};
-
 app.use(helmet()); // Adds security headers
-app.use(cors(corsOptions)); // Use CORS with the specified options
+app.use(cors());
 app.use(bodyParser.json());
 
 // Serve the main index.html file from the root directory
