@@ -7,20 +7,22 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-// Middleware to add security headers
-app.use(helmet());
-
-// Middleware to parse JSON bodies
+app.use(helmet()); // Adds security headers
 app.use(bodyParser.json());
 
-// CORS configuration
+// Define CORS options
 const corsOptions = {
     origin: 'http://127.0.0.1:5500', // Allows your local frontend
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 };
+
+// Apply CORS options to all requests
 app.use(cors(corsOptions));
+
+// Handle preflight requests for all routes with OPTIONS method
+app.options('*', cors(corsOptions));
 
 // Serve the main index.html file from the root directory
 app.get('/', (req, res) => {
