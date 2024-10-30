@@ -7,8 +7,9 @@ document.getElementById('registerForm').addEventListener('submit', async (event)
     const role = document.getElementById('role').value;
 
     // fetch url for azure website: https://clinic-website.azurewebsites.net/register
+    // fetch url for localhost: http://localhost:8080/register
     try {
-        const response = await fetch('http://localhost:8080/register', {
+        const response = await fetch('https://clinic-website.azurewebsites.net/register', {
 
             method: 'POST',
             headers: {

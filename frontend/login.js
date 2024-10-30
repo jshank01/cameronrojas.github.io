@@ -7,6 +7,8 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
+    // fetch url for azure website: https://clinic-website.azurewebsites.net/login
+    // fetch url for localhost: http://localhost:8080/login
     try {
         const response = await fetch('https://clinic-website.azurewebsites.net/login', {
 
