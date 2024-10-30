@@ -27,8 +27,8 @@ app.use(routerFiles); // assuming routerFiles exports a router
 // Optional: Serve other static assets from root if needed (like root-level CSS or JS)
 app.use(express.static(path.join(__dirname)));
 
-// Set the port for Azure or default to 3000
-const port = process.env.PORT || 3000;
+// Set the port for Azure or default to 8080
+const port = process.env.PORT || 8080;
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
