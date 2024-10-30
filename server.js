@@ -19,7 +19,7 @@ const corsOptions = {
 };
 
 // Apply CORS options to all requests
-//app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 // Handle preflight requests for all routes with OPTIONS method
 app.options('*', cors(corsOptions));
@@ -38,6 +38,9 @@ app.use('/frontend', express.static(path.join(__dirname, 'frontend')));
 // Import and use backend routes from the 'routerFiles' folder
 const loginRoute = require('./backend/routerFiles/loginRoute');
 app.use('/login', loginRoute);
+
+const registerRoute = require('./backend/routerFiles/registerRoute');
+app.use('/register', registerRoute);
 
 // Optional: Serve other static assets from root if needed (like root-level CSS or JS)
 app.use(express.static(path.join(__dirname)));
