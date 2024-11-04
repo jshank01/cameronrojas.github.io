@@ -4,28 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Dashboard</title>
-    <link rel="stylesheet" href="css/patient.css">
+    <link rel="stylesheet" href="../styles.css">
 </head>
-O
-
 <body>
     <div class="navbar">
-        <a href="../index.html">Home</a> <!-- Updated path for Home link -->
+        <a href="../index.html">Home</a>
         <a href="doctor.html">Doctor Dashboard</a>
         <a href="nurse.html">Nurse Dashboard</a>
         <a href="receptionist.html">Receptionist Dashboard</a>
         <a href="patient.html">Patient Dashboard</a>
-        <a href="../index.html">Logout</a> <!-- Updated path for Logout -->
+        <a href="../index.html">Logout</a>
     </div>
 
     <div class="dashboard">
         <h1>Patient Dashboard</h1>
-        <p>Welcome! Here you can view your medical history, upcoming appointments, and billing information.</p>
+        <p>Welcome! Here you can view your medical history, prescriptions, allergies, upcoming appointments, billing information, and more.</p>
 
         <!-- Medical History Section -->
         <section id="medical-history">
             <h2>Medical History</h2>
             <div id="medicalHistoryContent"></div>
+        </section>
+
+        <!-- Prescriptions Section -->
+        <section id="prescriptions">
+            <h2>Prescriptions</h2>
+            <div id="prescriptionContent"></div>
+        </section>
+
+        <!-- Allergies Section -->
+        <section id="allergies">
+            <h2>Allergies</h2>
+            <div id="allergyContent"></div>
+        </section>
+
+        <!-- Immunizations Section -->
+        <section id="immunizations">
+            <h2>Immunizations</h2>
+            <div id="immunizationContent"></div>
+        </section>
+
+        <!-- Surgeries Section -->
+        <section id="surgeries">
+            <h2>Past Surgeries</h2>
+            <div id="surgeryContent"></div>
         </section>
 
         <!-- Upcoming Appointments Section -->
@@ -40,7 +62,8 @@ O
             <div id="billingContent"></div>
         </section>
 
-        <button onclick="window.location.href='../index.html'">Logout</button> <!-- Updated path for Logout -->
+        <!-- Logout Button -->
+        <button onclick="window.location.href='../index.html'">Logout</button>
     </div>
 
     <script src="../frontend/patient.js"></script>
