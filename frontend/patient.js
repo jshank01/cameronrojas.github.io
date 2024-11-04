@@ -33,14 +33,15 @@ document.addEventListener('DOMContentLoaded', () => {
 // Toggle the visibility of a section
 function toggleSection(sectionId) {
     const section = document.getElementById(sectionId);
-    section.classList.toggle('active');
     const button = document.querySelector(`button[data-section="${sectionId}"]`);
-    if (section.classList.contains('active')) {
-        button.innerHTML = `- ${button.innerHTML.slice(2)}`;
+    
+    if (section.classList.toggle('active')) {
+        button.innerHTML = `- ${button.innerHTML.slice(2)}`; // Set to "-" if expanded
     } else {
-        button.innerHTML = `+ ${button.innerHTML.slice(2)}`;
+        button.innerHTML = `+ ${button.innerHTML.slice(2)}`; // Set to "+" if collapsed
     }
 }
+
 
 // Function to load upcoming appointments
 function loadUpcomingAppointments(username) {
