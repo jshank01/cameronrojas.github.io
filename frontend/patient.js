@@ -7,38 +7,35 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error("No username provided in URL");
         document.getElementById('appointmentContent').innerHTML = 'Username is missing from the URL.';
-        return; // Exit if no username
+        return;
     }
 
-    // Attach event listeners for buttons
-    document.querySelector('button[data-section="prescriptions"]').addEventListener('click', () => {
-        toggleSection('prescriptions');
-        loadPrescriptions(username);
+    // Initialize buttons with the correct icon
+    document.querySelectorAll('.toggle-button').forEach(button => {
+        const sectionId = button.getAttribute('data-section');
+        button.innerHTML = `+ ${button.innerHTML}`;
+        button.addEventListener('click', () => {
+            toggleSection(sectionId, button);
+            if (sectionId === 'prescriptions') loadPrescriptions(username);
+            if (sectionId === 'billing-info') loadBillingInfo(username);
+        });
     });
 
-    document.querySelector('button[data-section="billing-info"]').addEventListener('click', () => {
-        toggleSection('billing-info');
-        loadBillingInfo(username);
-    });
-
-    // Add event listener for logout button
     const logoutButton = document.getElementById('logoutButton');
     if (logoutButton) {
         logoutButton.addEventListener('click', () => {
-            window.location.href = '../index.html'; // Redirects to the home or login page
+            window.location.href = '../index.html';
         });
     }
 });
 
 // Toggle the visibility of a section
-function toggleSection(sectionId) {
+function toggleSection(sectionId, button) {
     const section = document.getElementById(sectionId);
-    const button = document.querySelector(`button[data-section="${sectionId}"]`);
-    
     if (section.classList.toggle('active')) {
-        button.innerHTML = `- ${button.innerHTML.slice(2)}`; // Set to "-" if expanded
+        button.innerHTML = button.innerHTML.replace('+', '-');
     } else {
-        button.innerHTML = `+ ${button.innerHTML.slice(2)}`; // Set to "+" if collapsed
+        button.innerHTML = button.innerHTML.replace('-', '+');
     }
 }
 
