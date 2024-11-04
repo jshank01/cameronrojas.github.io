@@ -1,48 +1,59 @@
 document.addEventListener('DOMContentLoaded', () => {
-    loadMedicalHistory();
-    loadPrescriptions();
-    loadAllergies();
-    loadImmunizations();
-    loadSurgeries();
-    loadAppointments();
-    loadBillingInfo();
+    const urlParams = new URLSearchParams(window.location.search);
+    const username = urlParams.get('username'); // Assume the URL contains ?username=some_patient
+
+    if (username) {
+        loadUpcomingAppointments(username);
+    } else {
+        console.error("No username provided in URL");
+    }
+
+    // Add event listener for logout button
     const logoutButton = document.getElementById('logoutButton');
     if (logoutButton) {
         logoutButton.addEventListener('click', () => {
-            window.location.href = '../index.html';
+            window.location.href = '../index.html'; // Redirects to the home or login page
         });
     }
 });
 
-// Function to load medical history
-function loadMedicalHistory() {
-    fetch('https://clinic-website.azurewebsites.net/api/patient/medicalHistory')
+// Toggle the visibility of a section
+function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    section.classList.toggle('active');
+}
+
+// Function to load upcoming appointments
+function loadUpcomingAppointments(username) {
+    fetch(`/api/patient/appointments/${username}`)
         .then(response => response.json())
         .then(data => {
             let content = '';
-            data.forEach(entry => {
-                content += `<p>Date: ${entry.date}</p>`;
-                content += `<p>Condition: ${entry.condition}</p>`;
+            data.forEach(appointment => {
+                content += `<p>Date: ${appointment.date}</p>`;
+                content += `<p>Time: ${appointment.time}</p>`;
+                content += `<p>Doctor: ${appointment.doctor}</p>`;
+                content += `<p>Reason: ${appointment.reason}</p>`;
                 content += `<hr>`;
             });
-            document.getElementById('medicalHistoryContent').innerHTML = content || 'No medical history found.';
+            document.getElementById('appointmentContent').innerHTML = content || 'No upcoming appointments found.';
         })
         .catch(error => {
-            console.error('Error loading medical history:', error);
-            document.getElementById('medicalHistoryContent').innerHTML = 'Error loading medical history.';
+            console.error('Error loading upcoming appointments:', error);
+            document.getElementById('appointmentContent').innerHTML = 'Error loading upcoming appointments.';
         });
 }
 
-// Function to load prescriptions
-function loadPrescriptions() {
-    fetch('https://clinic-website.azurewebsites.net/api/patient/prescriptions')
+// Function to load prescriptions (expand when requested)
+function loadPrescriptions(username) {
+    fetch(`/api/patient/prescriptions/${username}`)
         .then(response => response.json())
         .then(data => {
             let content = '';
-            data.forEach(entry => {
-                content += `<p>Medicine: ${entry.name}</p>`;
-                content += `<p>Dosage: ${entry.dosage}</p>`;
-                content += `<p>Frequency: ${entry.frequency}</p>`;
+            data.forEach(prescription => {
+                content += `<p>Medicine: ${prescription.name}</p>`;
+                content += `<p>Dosage: ${prescription.dosage}</p>`;
+                content += `<p>Frequency: ${prescription.frequency}</p>`;
                 content += `<hr>`;
             });
             document.getElementById('prescriptionContent').innerHTML = content || 'No prescriptions found.';
@@ -53,100 +64,17 @@ function loadPrescriptions() {
         });
 }
 
-// Function to load allergies
-function loadAllergies() {
-    fetch('https://clinic-website.azurewebsites.net/api/patient/allergies')
+// Function to load billing information (expand when requested)
+function loadBillingInfo(username) {
+    fetch(`/api/patient/billing/${username}`)
         .then(response => response.json())
         .then(data => {
             let content = '';
-            data.forEach(entry => {
-                content += `<p>Allergy: ${entry.allergy}</p>`;
-                content += `<p>Start Date: ${entry.startDate}</p>`;
-                content += `<p>End Date: ${entry.endDate}</p>`;
-                content += `<p>Seasonal: ${entry.seasonal ? 'Yes' : 'No'}</p>`;
-                content += `<hr>`;
-            });
-            document.getElementById('allergyContent').innerHTML = content || 'No allergies found.';
-        })
-        .catch(error => {
-            console.error('Error loading allergies:', error);
-            document.getElementById('allergyContent').innerHTML = 'Error loading allergies.';
-        });
-}
-
-// Function to load immunizations
-function loadImmunizations() {
-    fetch('https://clinic-website.azurewebsites.net/api/patient/immunizations')
-        .then(response => response.json())
-        .then(data => {
-            let content = '';
-            data.forEach(entry => {
-                content += `<p>Vaccine: ${entry.vaccine}</p>`;
-                content += `<p>Date: ${entry.vaxDate}</p>`;
-                content += `<p>Cost: $${entry.cost}</p>`;
-                content += `<hr>`;
-            });
-            document.getElementById('immunizationContent').innerHTML = content || 'No immunizations found.';
-        })
-        .catch(error => {
-            console.error('Error loading immunizations:', error);
-            document.getElementById('immunizationContent').innerHTML = 'Error loading immunizations.';
-        });
-}
-
-// Function to load past surgeries
-function loadSurgeries() {
-    fetch('https://clinic-website.azurewebsites.net/api/patient/surgeries')
-        .then(response => response.json())
-        .then(data => {
-            let content = '';
-            data.forEach(entry => {
-                content += `<p>Procedure: ${entry.procedure}</p>`;
-                content += `<p>Date: ${entry.date}</p>`;
-                content += `<p>Body Part: ${entry.bodyPart}</p>`;
-                content += `<p>Cost: $${entry.cost}</p>`;
-                content += `<hr>`;
-            });
-            document.getElementById('surgeryContent').innerHTML = content || 'No surgeries found.';
-        })
-        .catch(error => {
-            console.error('Error loading surgeries:', error);
-            document.getElementById('surgeryContent').innerHTML = 'Error loading surgeries.';
-        });
-}
-
-// Function to load upcoming appointments
-function loadAppointments() {
-    fetch('https://clinic-website.azurewebsites.net/api/patient/appointments')
-        .then(response => response.json())
-        .then(data => {
-            let content = '';
-            data.forEach(entry => {
-                content += `<p>Date: ${entry.date}</p>`;
-                content += `<p>Time: ${entry.time}</p>`;
-                content += `<p>Doctor: ${entry.doctor}</p>`;
-                content += `<p>Reason: ${entry.reason}</p>`;
-                content += `<hr>`;
-            });
-            document.getElementById('appointmentContent').innerHTML = content || 'No upcoming appointments found.';
-        })
-        .catch(error => {
-            console.error('Error loading appointments:', error);
-            document.getElementById('appointmentContent').innerHTML = 'Error loading appointments.';
-        });
-}
-
-// Function to load billing information
-function loadBillingInfo() {
-    fetch('https://clinic-website.azurewebsites.net/api/patient/billing')
-        .then(response => response.json())
-        .then(data => {
-            let content = '';
-            data.forEach(entry => {
-                content += `<p>Charge For: ${entry.chargeFor}</p>`;
-                content += `<p>Total Charge: $${entry.totalCharge}</p>`;
-                content += `<p>Charge Date: ${entry.chargeDate}</p>`;
-                content += `<p>Paid Off: ${entry.paidOff ? 'Yes' : 'No'}</p>`;
+            data.forEach(bill => {
+                content += `<p>Charge For: ${bill.chargeFor}</p>`;
+                content += `<p>Total Charge: $${bill.totalCharge}</p>`;
+                content += `<p>Charge Date: ${bill.chargeDate}</p>`;
+                content += `<p>Paid Off: ${bill.paidOff ? 'Yes' : 'No'}</p>`;
                 content += `<hr>`;
             });
             document.getElementById('billingContent').innerHTML = content || 'No billing information found.';
@@ -156,3 +84,7 @@ function loadBillingInfo() {
             document.getElementById('billingContent').innerHTML = 'Error loading billing information.';
         });
 }
+
+// Load data for sections only when expanded
+document.querySelector('.toggle-button[onclick="toggleSection(\'prescriptions\')"]').addEventListener('click', () => loadPrescriptions(username));
+document.querySelector('.toggle-button[onclick="toggleSection(\'billing-info\')"]').addEventListener('click', () => loadBillingInfo(username));
