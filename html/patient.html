@@ -46,12 +46,28 @@
 
             if (section.classList.contains("active")) {
                 section.classList.remove("active");
-                icon.textContent = "+"; // Change to + when collapsed
+                icon.textContent = "+"; // Set to + when collapsed
             } else {
                 section.classList.add("active");
-                icon.textContent = "-"; // Change to - when expanded
+                icon.textContent = "-"; // Set to - when expanded
             }
         }
+
+        // Initialize icons based on section visibility
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll(".toggle-button").forEach(button => {
+                const sectionId = button.getAttribute("data-section");
+                const section = document.getElementById(sectionId);
+                const icon = button.querySelector("span");
+
+                // Set initial icon based on section visibility
+                if (section.classList.contains("active")) {
+                    icon.textContent = "-";
+                } else {
+                    icon.textContent = "+";
+                }
+            });
+        });
     </script>
 </body>
 </html>
