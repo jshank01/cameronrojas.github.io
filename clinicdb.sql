@@ -1,200 +1,19 @@
--- create database clinicdb
+-- Create Database
+CREATE DATABASE IF NOT EXISTS clinicdb;
+USE clinicdb;
+
+-- Table Creation
+CREATE TABLE Users (
+    username VARCHAR(50) PRIMARY KEY NOT NULL,
+    password VARCHAR(255) NOT NULL UNIQUE,
+    role ENUM('patient', 'doctor', 'nurse', 'receptionist', 'admin') NOT NULL
+);
+
 CREATE TABLE Office (
     office_id INT PRIMARY KEY NOT NULL,
     location VARCHAR(128) NOT NULL,
     admin_id VARCHAR(9),
-    admin_start_date DATE,
-    FOREIGN KEY (admin_id) REFERENCES Admin(employee_ssn)
-		ON DELETE SET NULL ON UPDATE CASCADE
-);
-CREATE TABLE Appointment(
-	app_date DATE NOT NULL,
-    P_ID INT NOT NULL,
-    app_start_time TIME NOT NULL,
-	app_end_time TIME NOT NULL,
-    D_ID VARCHAR(9) NOT NULL,
-    reason_for_visit VARCHAR(50),
-    referral VARCHAR(9),
-    need_referral BOOL,
-    PRIMARY KEY (P_ID, app_date, app_start_time),
-    FOREIGN KEY (D_ID) REFERENCES Doctor(employee_ssn)
-		ON DELETE RESTRICT ON UPDATE CASCADE, -- if doctor gets deleted need to contact patients with appt and change doc b4 deleting
-    FOREIGN KEY (referral) REFERENCES Doctor(employee_ssn)
-		ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (P_ID) REFERENCES Patient(patient_id)
-		ON DELETE CASCADE ON UPDATE CASCADE
-);
-CREATE TABLE Billing (
-	P_ID INT NOT NULL,
-    D_ID VARCHAR(9),
-    charge_for VARCHAR(50),
-    total_charge INT,
-    charge_date DATETIME NOT NULL,
-    paid_off BOOL,
-    paid_total INT,
-    PRIMARY KEY (P_ID, charge_date),
-    FOREIGN KEY(P_ID) REFERENCES patient(patient_id)
-		ON DELETE RESTRICT ON UPDATE CASCADE, -- restrict the delete because need to keep track of billing
-	FOREIGN KEY (D_ID) REFERENCES Doctor(employee_ssn)
-		ON DELETE RESTRICT ON UPDATE CASCADE -- restrict because need to know how much to charge before the doctor is deleted
-);
-CREATE TABLE Payment( -- need to seperate payment and billing because patient can pay multiple times for the same charge and can have multiple charges paid at once
-	P_ID INT NOT NULL,
-    total_paid INT,
-    pay_date DATETIME NOT NULL, 
-    pay_towards DATETIME, -- ADD pay_towards that references specific bill
-    PRIMARY KEY (P_ID, pay_date),
-    FOREIGN KEY(P_ID) REFERENCES patient(patient_id)
-		ON DELETE RESTRICT ON UPDATE CASCADE, -- Restrict the delete because need to keep track of payments
-	FOREIGN KEY(P_ID, pay_towards) REFERENCES Billing(P_ID, charge_date)
-		ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
-CREATE TABLE Referral(
-	primary_doc VARCHAR(9) NOT NULL,
-    P_ID INT NOT NULL,
-    ref_date DATETIME NOT NULL,
-    experiation DATE NOT NULL,
-    specialist VARCHAR(9) NOT NULL,
-    doc_appr BOOL,
-    used BOOL,
-    PRIMARY KEY (P_ID, ref_date),
-    FOREIGN KEY (primary_doc) REFERENCES Doctor(employee_ssn)
-		ON DELETE RESTRICT ON UPDATE CASCADE,
-	FOREIGN KEY (specialist) REFERENCES Doctor(employee_ssn)
-		ON DELETE RESTRICT ON UPDATE CASCADE,
-	FOREIGN KEY(P_ID) REFERENCES Patient(patient_id)
-		ON DELETE CASCADE ON UPDATE CASCADE
-);
-CREATE TABLE Medication (
-    medicine VARCHAR(50) NOT NULL,
-    start_date DATE,
-    end_date DATE,
-    dosage VARCHAR(25),
-    time_of_day VARCHAR(20),
-    D_ID VARCHAR(9),
-    P_ID INT NOT NULL,
-    cost INT,
-    PRIMARY KEY (P_ID, medicine),
-    FOREIGN KEY (D_ID) REFERENCES Doctor(employee_ssn)
-		ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY (P_ID) REFERENCES Patient(patient_id)
-		ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE Allergies(
-	allergy VARCHAR(20)NOT NULL,
-    P_ID INT NOT NULL,
-    start_date DATE,
-    end_date DATE,
-    seasonal BOOL,
-    PRIMARY KEY (P_ID, allergy),
-    FOREIGN KEY (P_ID) REFERENCES Patient(patient_id)
-		ON DELETE CASCADE ON UPDATE CASCADE
-);
-CREATE TABLE Illness(
-	ailment VARCHAR(50) NOT NULL,
-    P_ID INT NOT NULL,
-    start_date DATE,
-    end_date DATE,
-    PRIMARY KEY (P_ID, ailment),
-    FOREIGN KEY (P_ID) REFERENCES Patient(patient_id)
-		ON DELETE CASCADE ON UPDATE CASCADE
-);
-CREATE TABLE Surgery(
-	procedure_done VARCHAR(50) NOT NULL,
-    P_ID INT NOT NULL,
-    body_part VARCHAR(25),
-    surgery_date DATE,
-    cost INT,
-    PRIMARY KEY (P_ID, procedure_done),
-    FOREIGN KEY (P_ID) REFERENCES Patient(patient_id)
-		ON DELETE CASCADE ON UPDATE CASCADE
-);
-CREATE TABLE Immunization(
-	vaccine VARCHAR(50) NOT NULL,
-    P_ID INT NOT NULL,
-    vax_date DATE,
-    cost INT,
-    PRIMARY KEY (P_ID, vaccine),
-    FOREIGN KEY (P_ID) REFERENCES Patient(patient_id)
-		ON DELETE CASCADE ON UPDATE CASCADE
-);
-CREATE TABLE Med_History(
-	P_ID int NOT NULL,
-    last_visit DATETIME NOT NULL,
-    height SMALLINT,
-    weight SMALLINT,
-    blood_pressure VARCHAR(10),
-    PRIMARY KEY (P_ID, last_visit),
-    FOREIGN KEY(P_ID) REFERENCES Patient(patient_id)
-		ON DELETE CASCADE ON UPDATE CASCADE
-);
-CREATE TABLE Doctor (
-    employee_ssn VARCHAR(9) PRIMARY KEY NOT NULL,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    Admin_ssn VARCHAR(9),
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    hire_date DATE,
-    salary INT,
-    office_id INT,
-    specialty VARCHAR(25),
-    specialist BOOL,
-    cost INT,
-    FOREIGN KEY (office_id) REFERENCES Office(office_id)
-		ON DELETE SET NULL ON UPDATE CASCADE,
-	FOREIGN KEY (username) REFERENCES Users(username)
-		ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (Admin_ssn) REFERENCES Admin(employee_ssn)
-		ON DELETE SET NULL ON UPDATE CASCADE
-);
-
-CREATE TABLE Nurse (
-    employee_ssn VARCHAR(9) PRIMARY KEY NOT NULL,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    Admin_ssn VARCHAR(9),
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    hire_date DATE,
-    salary INT,
-    office_id INT,
-    FOREIGN KEY (username) REFERENCES Users(username)
-		ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (office_id) REFERENCES Office(office_id)
-		ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY (Admin_ssn) REFERENCES Admin(employee_ssn)
-		ON DELETE SET NULL ON UPDATE CASCADE
-);
-CREATE TABLE Receptionist (
-	employee_ssn VARCHAR(9) PRIMARY KEY NOT NULL,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    Admin_ssn VARCHAR(9),
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    hire_date DATE,
-    salary INT,
-    office_id INT,
-    FOREIGN KEY (username) REFERENCES Users(username)
-		ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (office_id) REFERENCES Office(office_id)
-		ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY (Admin_ssn) REFERENCES Admin(employee_ssn)
-		ON DELETE SET NULL ON UPDATE CASCADE
-);
-CREATE TABLE Patient (
-    patient_id INT PRIMARY KEY NOT NULL,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    date_of_birth DATE,
-    address VARCHAR(128),
-    phone_number VARCHAR(10),
-    primary_id VARCHAR(9),
-    FOREIGN KEY (username) REFERENCES Users(username)
-		ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (primary_id) REFERENCES Doctor(employee_ssn)
-		ON DELETE SET NULL ON UPDATE CASCADE
+    admin_start_date DATE
 );
 
 CREATE TABLE Admin (
@@ -206,15 +25,214 @@ CREATE TABLE Admin (
     salary INT,
     office_id INT,
     FOREIGN KEY (username) REFERENCES Users(username)
-		ON DELETE RESTRICT ON UPDATE CASCADE,
+        ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (office_id) REFERENCES Office(office_id)
-		ON DELETE SET NULL ON UPDATE CASCADE
+        ON DELETE SET NULL ON UPDATE CASCADE
 );
 
-CREATE TABLE Users (
-    username VARCHAR(50) PRIMARY KEY NOT NULL,
-    password VARCHAR(255) NOT NULL UNIQUE,
-    role enum('patient','doctor','nurse','receptionist','admin') NOT NULL
+-- Resolve Circular Reference by Altering Office Table
+ALTER TABLE Office
+ADD FOREIGN KEY (admin_id) REFERENCES Admin(employee_ssn)
+    ON DELETE SET NULL ON UPDATE CASCADE;
+
+CREATE TABLE Doctor (
+    employee_ssn VARCHAR(9) PRIMARY KEY NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    admin_ssn VARCHAR(9),
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    hire_date DATE,
+    salary INT,
+    office_id INT,
+    specialty VARCHAR(25),
+    specialist BOOL,
+    cost INT,
+    FOREIGN KEY (username) REFERENCES Users(username)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (office_id) REFERENCES Office(office_id)
+        ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (admin_ssn) REFERENCES Admin(employee_ssn)
+        ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE TABLE Nurse (
+    employee_ssn VARCHAR(9) PRIMARY KEY NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    admin_ssn VARCHAR(9),
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    hire_date DATE,
+    salary INT,
+    office_id INT,
+    FOREIGN KEY (username) REFERENCES Users(username)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (office_id) REFERENCES Office(office_id)
+        ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (admin_ssn) REFERENCES Admin(employee_ssn)
+        ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE TABLE Receptionist (
+    employee_ssn VARCHAR(9) PRIMARY KEY NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    admin_ssn VARCHAR(9),
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    hire_date DATE,
+    salary INT,
+    office_id INT,
+    FOREIGN KEY (username) REFERENCES Users(username)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (office_id) REFERENCES Office(office_id)
+        ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (admin_ssn) REFERENCES Admin(employee_ssn)
+        ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE TABLE Patient (
+    patient_id INT PRIMARY KEY NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    date_of_birth DATE,
+    address VARCHAR(128),
+    phone_number VARCHAR(10),
+    primary_id VARCHAR(9),
+    FOREIGN KEY (username) REFERENCES Users(username)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (primary_id) REFERENCES Doctor(employee_ssn)
+        ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE TABLE Appointment (
+    app_date DATE NOT NULL,
+    P_ID INT NOT NULL,
+    app_start_time TIME NOT NULL,
+    app_end_time TIME NOT NULL,
+    D_ID VARCHAR(9) NOT NULL,
+    reason_for_visit VARCHAR(50),
+    referral VARCHAR(9),
+    need_referral BOOL,
+    PRIMARY KEY (P_ID, app_date, app_start_time),
+    FOREIGN KEY (D_ID) REFERENCES Doctor(employee_ssn)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (referral) REFERENCES Doctor(employee_ssn)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (P_ID) REFERENCES Patient(patient_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Billing (
+    P_ID INT NOT NULL,
+    D_ID VARCHAR(9),
+    charge_for VARCHAR(50),
+    total_charge INT,
+    charge_date DATETIME NOT NULL,
+    paid_off BOOL,
+    paid_total INT,
+    PRIMARY KEY (P_ID, charge_date),
+    FOREIGN KEY (P_ID) REFERENCES Patient(patient_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (D_ID) REFERENCES Doctor(employee_ssn)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE Payment (
+    P_ID INT NOT NULL,
+    total_paid INT,
+    pay_date DATETIME NOT NULL,
+    pay_towards DATETIME,
+    PRIMARY KEY (P_ID, pay_date),
+    FOREIGN KEY (P_ID) REFERENCES Patient(patient_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (P_ID, pay_towards) REFERENCES Billing(P_ID, charge_date)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE TABLE Referral (
+    primary_doc VARCHAR(9) NOT NULL,
+    P_ID INT NOT NULL,
+    ref_date DATETIME NOT NULL,
+    experiation DATE NOT NULL,
+    specialist VARCHAR(9) NOT NULL,
+    doc_appr BOOL,
+    used BOOL,
+    PRIMARY KEY (P_ID, ref_date),
+    FOREIGN KEY (primary_doc) REFERENCES Doctor(employee_ssn)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (specialist) REFERENCES Doctor(employee_ssn)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (P_ID) REFERENCES Patient(patient_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Medication (
+    medicine VARCHAR(50) NOT NULL,
+    start_date DATE,
+    end_date DATE,
+    dosage VARCHAR(25),
+    time_of_day VARCHAR(20),
+    D_ID VARCHAR(9),
+    P_ID INT NOT NULL,
+    cost INT,
+    PRIMARY KEY (P_ID, medicine),
+    FOREIGN KEY (D_ID) REFERENCES Doctor(employee_ssn)
+        ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (P_ID) REFERENCES Patient(patient_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Allergies (
+    allergy VARCHAR(20) NOT NULL,
+    P_ID INT NOT NULL,
+    start_date DATE,
+    end_date DATE,
+    seasonal BOOL,
+    PRIMARY KEY (P_ID, allergy),
+    FOREIGN KEY (P_ID) REFERENCES Patient(patient_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Illness (
+    ailment VARCHAR(50) NOT NULL,
+    P_ID INT NOT NULL,
+    start_date DATE,
+    end_date DATE,
+    PRIMARY KEY (P_ID, ailment),
+    FOREIGN KEY (P_ID) REFERENCES Patient(patient_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Surgery (
+    procedure_done VARCHAR(50) NOT NULL,
+    P_ID INT NOT NULL,
+    body_part VARCHAR(25),
+    surgery_date DATE,
+    cost INT,
+    PRIMARY KEY (P_ID, procedure_done),
+    FOREIGN KEY (P_ID) REFERENCES Patient(patient_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Immunization (
+    vaccine VARCHAR(50) NOT NULL,
+    P_ID INT NOT NULL,
+    vax_date DATE,
+    cost INT,
+    PRIMARY KEY (P_ID, vaccine),
+    FOREIGN KEY (P_ID) REFERENCES Patient(patient_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Med_History (
+    P_ID INT NOT NULL,
+    last_visit DATETIME NOT NULL,
+    height SMALLINT,
+    weight SMALLINT,
+    blood_pressure VARCHAR(10),
+    PRIMARY KEY (P_ID, last_visit),
+    FOREIGN KEY (P_ID) REFERENCES Patient(patient_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE VIEW Doctor_Patient_History_View
@@ -349,6 +367,7 @@ BEGIN
     END IF;
 END; //
 
+-- THIS MIGHT NOT WORK SAYS ERRORS ON MY WORKBENCH
 DELIMITER //
 CREATE TRIGGER Appointment_Reminders
 -- The trigger will begin when an appointment is added
@@ -372,29 +391,8 @@ END; //
 DELIMITER ;
 
 DELIMITER //
-CREATE TRIGGER Appointment_Reminders
-AFTER INSERT ON Appointment
-FOR EACH ROW
-BEGIN
-    -- Calculate the 1-day and 2-hour reminder times
-    DECLARE reminder_date_1day DATETIME;
-    DECLARE reminder_date_2hour DATETIME;
-
-    SET reminder_date_1day = DATE_SUB(NEW.app_date, INTERVAL 1 DAY);
-    SET reminder_date_2hour = TIMESTAMPADD(HOUR, -2, CONCAT(NEW.app_date, ' ', NEW.app_start_time));
-
-    -- Insert logic to notify the patient (or log the reminders if needed)
-    INSERT INTO Logs (log_message, log_time)  -- Example log for debugging
-    VALUES (CONCAT('Reminder set for 1 day before appointment on ', reminder_date_1day), NOW());
-
-    INSERT INTO Logs (log_message, log_time)  -- Log for 2-hour reminder
-    VALUES (CONCAT('Reminder set for 2 hours before appointment on ', reminder_date_2hour), NOW());
-END; //
-DELIMITER ;
-
-DELIMITER //
 CREATE EVENT Send_Reminders
-ON SCHEDULE EVERY 1 HOUR 
+ON SCHEDULE EVERY 1 HOUR  -- Adjust based on your needs
 DO
 BEGIN
     -- Send the 1-day reminders
@@ -418,12 +416,16 @@ BEGIN
 END; //
 DELIMITER ;
 
- -- Table created for debugging. Make sure the reminders are sending.
+;
+
+-- Testing the appointment_Reminder by storing the reminders in a log table. This table is not required, only using for debugging.
 CREATE TABLE Logs (
     log_id INT AUTO_INCREMENT PRIMARY KEY,
     log_message VARCHAR(255),
     log_time DATETIME
 );
+-- THIS SECTION MIGHT NOT WORK, DELETE/COMMENT OUT IF NECESSARY
+
 -- 2 triggers will be the appointment reminder & referral trigger
 -- create view for the receptionist to see all of patients bills and payments, create view for doctor to see all patients med history combined.
 -- create view where receptionist can see current appts for specific doctor
@@ -466,8 +468,7 @@ VALUES (1, 'kthompson_patient', 'Kyle', 'Thompson', '1995-04-12', '321 Maple St,
 (3, 'rmartinez_patient', 'Ricardo', 'Martinez', '1993-09-30', '987 Birch St, Houston, TX', '7134551234', '567890123');
 
 -- LOGIN DUMMY INFO
-INSERT INTO Users(username, password, role) az login
-
+INSERT INTO Users(username, password, role) 
 VALUES ('temp_username', 'temp_pass', 'doctor'),
 ('asmith', 'doctor2', 'doctor'),
 ('bjohnson', 'doctor3', 'doctor'),
@@ -483,4 +484,3 @@ VALUES ('temp_username', 'temp_pass', 'doctor'),
 ('kthompson_patient', 'patient1', 'patient'),
 ('nlee_patient', 'patient2', 'patient'),
 ('rmartinez_patient', 'patient3', 'patient');
-
