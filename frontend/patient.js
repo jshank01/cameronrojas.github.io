@@ -6,6 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSurgeries();
     loadAppointments();
     loadBillingInfo();
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            window.location.href = '../index.html';
+        });
+    }
 });
 
 function loadMedicalHistory() {
@@ -70,12 +76,3 @@ function loadBillingInfo() {
             document.getElementById('billingContent').innerHTML = JSON.stringify(data);
         });
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    const logoutButton = document.getElementById('logoutButton');
-    if (logoutButton) {
-        logoutButton.addEventListener('click', () => {
-            window.location.href = '../index.html';
-        });
-    }
-});
