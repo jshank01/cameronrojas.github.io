@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function loadMedicalHistory() {
     // Fetch and display medical history data
-    fetch('/api/medicalHistory')
+    fetch('https://clinic-website.azurewebsites.net/api/medicalHistory')
         .then(response => response.json())
         .then(data => {
             document.getElementById('medicalHistoryContent').innerHTML = JSON.stringify(data);
@@ -25,7 +25,7 @@ function loadMedicalHistory() {
 
 function loadPrescriptions() {
     // Fetch and display prescriptions
-    fetch('/api/prescriptions')
+    fetch('https://clinic-website.azurewebsites.net/api/prescriptions')
         .then(response => response.json())
         .then(data => {
             document.getElementById('prescriptionContent').innerHTML = JSON.stringify(data);
@@ -34,7 +34,7 @@ function loadPrescriptions() {
 
 function loadAllergies() {
     // Fetch and display allergy data
-    fetch('/api/allergies')
+    fetch('https://clinic-website.azurewebsites.net/api/allergies')
         .then(response => response.json())
         .then(data => {
             document.getElementById('allergyContent').innerHTML = JSON.stringify(data);
@@ -43,7 +43,7 @@ function loadAllergies() {
 
 function loadImmunizations() {
     // Fetch and display immunization records
-    fetch('/api/immunizations')
+    fetch('https://clinic-website.azurewebsites.net/api/immunizations')
         .then(response => response.json())
         .then(data => {
             document.getElementById('immunizationContent').innerHTML = JSON.stringify(data);
@@ -52,7 +52,7 @@ function loadImmunizations() {
 
 function loadSurgeries() {
     // Fetch and display surgeries
-    fetch('/api/surgeries')
+    fetch('https://clinic-website.azurewebsites.net/api/surgeries')
         .then(response => response.json())
         .then(data => {
             document.getElementById('surgeryContent').innerHTML = JSON.stringify(data);
@@ -61,7 +61,7 @@ function loadSurgeries() {
 
 function loadAppointments() {
     // Fetch and display upcoming appointments
-    fetch('/api/appointments')
+    fetch('https://clinic-website.azurewebsites.net/api/appointments')
         .then(response => response.json())
         .then(data => {
             document.getElementById('appointmentContent').innerHTML = JSON.stringify(data);
@@ -70,7 +70,7 @@ function loadAppointments() {
 
 function loadBillingInfo() {
     // Fetch and display billing information
-    fetch('/api/billing')
+    fetch('https://clinic-website.azurewebsites.net/api/billing')
         .then(response => response.json())
         .then(data => {
             document.getElementById('billingContent').innerHTML = JSON.stringify(data);
