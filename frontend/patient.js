@@ -21,19 +21,25 @@ document.addEventListener('DOMContentLoaded', () => {
         loadBillingInfo(username);
     });
 
-        // Add event listener for logout button
-        const logoutButton = document.getElementById('logoutButton');
-        if (logoutButton) {
-            logoutButton.addEventListener('click', () => {
-                window.location.href = '../index.html'; // Redirects to the home or login page
-            });
-        }
+    // Add event listener for logout button
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            window.location.href = '../index.html'; // Redirects to the home or login page
+        });
+    }
 });
 
 // Toggle the visibility of a section
 function toggleSection(sectionId) {
     const section = document.getElementById(sectionId);
     section.classList.toggle('active');
+    const button = document.querySelector(`button[data-section="${sectionId}"]`);
+    if (section.classList.contains('active')) {
+        button.innerHTML = `- ${button.innerHTML.slice(2)}`;
+    } else {
+        button.innerHTML = `+ ${button.innerHTML.slice(2)}`;
+    }
 }
 
 // Function to load upcoming appointments

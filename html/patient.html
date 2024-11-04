@@ -21,7 +21,7 @@
         </section>
 
         <!-- Toggle buttons to expand/collapse other sections -->
-        <button class="toggle-button" data-section="prescriptions" onclick="toggleSection('prescriptions', this)">
+        <button class="toggle-button" data-section="prescriptions">
             + Prescriptions
         </button>
         <section id="prescriptions" class="section">
@@ -29,7 +29,7 @@
             <div id="prescriptionContent">No prescriptions found.</div>
         </section>
 
-        <button class="toggle-button" data-section="billing-info" onclick="toggleSection('billing-info', this)">
+        <button class="toggle-button" data-section="billing-info">
             + Billing Information
         </button>
         <section id="billing-info" class="section">
@@ -39,18 +39,5 @@
     </div>
 
     <script src="../frontend/patient.js"></script>
-    <script>
-        function toggleSection(sectionId, button) {
-            const section = document.getElementById(sectionId);
-
-            if (section.classList.contains("active")) {
-                section.classList.remove("active");
-                button.textContent = `+ ${button.textContent.slice(2)}`; // Show + when collapsed
-            } else {
-                section.classList.add("active");
-                button.textContent = `- ${button.textContent.slice(2)}`; // Show - when expanded
-            }
-        }
-    </script>
 </body>
 </html>
