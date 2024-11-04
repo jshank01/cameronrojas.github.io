@@ -5,28 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Profile</title>
     <link rel="stylesheet" href="../styles.css">
-    <style>
-        .section {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px 0;
-            display: none; /* Initially hidden */
-        }
-        .section.active {
-            display: block; /* Show when active */
-        }
-        .toggle-button {
-            cursor: pointer;
-            color: #007bff;
-            text-decoration: underline;
-            background: none;
-            border: none;
-            font-size: 16px;
-        }
-        .toggle-button:focus {
-            outline: none;
-        }
-    </style>
 </head>
 <body>
     <div class="dashboard">
@@ -42,13 +20,17 @@
         </section>
 
         <!-- Toggle buttons to expand/collapse other sections -->
-        <button class="toggle-button" data-section="prescriptions">Prescriptions</button>
+        <button class="toggle-button" data-section="prescriptions" onclick="toggleSection('prescriptions')">
+            <span>+</span> Prescriptions
+        </button>
         <section id="prescriptions" class="section">
             <h2>Prescriptions</h2>
             <div id="prescriptionContent">No prescriptions found.</div>
         </section>
 
-        <button class="toggle-button" data-section="billing-info">Billing Information</button>
+        <button class="toggle-button" data-section="billing-info" onclick="toggleSection('billing-info')">
+            <span>+</span> Billing Information
+        </button>
         <section id="billing-info" class="section">
             <h2>Billing Information</h2>
             <div id="billingContent">No billing information found.</div>
@@ -56,5 +38,20 @@
     </div>
 
     <script src="../frontend/patient.js"></script>
+    <script>
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const button = document.querySelector(`button[data-section="${sectionId}"]`);
+            const icon = button.querySelector("span");
+
+            if (section.classList.contains("active")) {
+                section.classList.remove("active");
+                icon.textContent = "+"; // Change to + when collapsed
+            } else {
+                section.classList.add("active");
+                icon.textContent = "-"; // Change to - when expanded
+            }
+        }
+    </script>
 </body>
 </html>

@@ -196,3 +196,35 @@ button:hover {
     font-size: 14px;
     color: #555;
 }
+
+.section {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    display: none; /* Initially hidden */
+}
+.section.active {
+    display: block; /* Show when active */
+}
+.toggle-button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: none;
+    background: none;
+    border: none;
+    font-size: 16px;
+    padding: 10px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+.toggle-button:focus {
+    outline: none;
+}
+.toggle-button span {
+    font-weight: bold;
+    margin-right: 8px;
+}
