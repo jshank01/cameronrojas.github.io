@@ -32,7 +32,7 @@ router.post('/', async (req, res) => {
                     redirectPath = '/html/admin.html';
                     break;
                 case 'patient':
-                    redirectPath = '/html/patient.html';
+                    redirectPath = `/html/patient.html?username=${user.username}`;
                     break;
                 default:
                     return res.status(401).json({ message: 'Role not recognized' });

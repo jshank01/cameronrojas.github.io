@@ -1,20 +1,33 @@
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const username = urlParams.get('username'); // Assume the URL contains ?username=some_patient
+    const username = urlParams.get('username');
 
     if (username) {
         loadUpcomingAppointments(username);
     } else {
         console.error("No username provided in URL");
+        document.getElementById('appointmentContent').innerHTML = 'Username is missing from the URL.';
+        return; // Exit if no username
     }
 
-    // Add event listener for logout button
-    const logoutButton = document.getElementById('logoutButton');
-    if (logoutButton) {
-        logoutButton.addEventListener('click', () => {
-            window.location.href = '../index.html'; // Redirects to the home or login page
-        });
-    }
+    // Attach event listeners for buttons
+    document.querySelector('button[data-section="prescriptions"]').addEventListener('click', () => {
+        toggleSection('prescriptions');
+        loadPrescriptions(username);
+    });
+
+    document.querySelector('button[data-section="billing-info"]').addEventListener('click', () => {
+        toggleSection('billing-info');
+        loadBillingInfo(username);
+    });
+
+        // Add event listener for logout button
+        const logoutButton = document.getElementById('logoutButton');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', () => {
+                window.location.href = '../index.html'; // Redirects to the home or login page
+            });
+        }
 });
 
 // Toggle the visibility of a section
@@ -44,7 +57,7 @@ function loadUpcomingAppointments(username) {
         });
 }
 
-// Function to load prescriptions (expand when requested)
+// Function to load prescriptions
 function loadPrescriptions(username) {
     fetch(`/api/patient/prescriptions/${username}`)
         .then(response => response.json())
@@ -64,7 +77,7 @@ function loadPrescriptions(username) {
         });
 }
 
-// Function to load billing information (expand when requested)
+// Function to load billing information
 function loadBillingInfo(username) {
     fetch(`/api/patient/billing/${username}`)
         .then(response => response.json())
@@ -84,7 +97,3 @@ function loadBillingInfo(username) {
             document.getElementById('billingContent').innerHTML = 'Error loading billing information.';
         });
 }
-
-// Load data for sections only when expanded
-document.querySelector('.toggle-button[onclick="toggleSection(\'prescriptions\')"]').addEventListener('click', () => loadPrescriptions(username));
-document.querySelector('.toggle-button[onclick="toggleSection(\'billing-info\')"]').addEventListener('click', () => loadBillingInfo(username));

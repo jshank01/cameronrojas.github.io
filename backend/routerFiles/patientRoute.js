@@ -1,83 +1,59 @@
 const express = require('express');
 const router = express.Router();
 
-// Mock data for demonstration; replace these with actual database queries
-const medicalHistoryData = {
-    kthompson_patient: [
-        { date: '2023-01-15', condition: 'Hypertension' },
-        { date: '2023-02-10', condition: 'Diabetes' }
+// Mock data for demonstration
+const appointments = {
+    'kthompson_patient': [
+        { date: '2023-05-15', time: '10:00 AM', doctor: 'Dr. Smith', reason: 'Follow-up' }
     ],
-    nlee_patient: [
-        { date: '2022-11-05', condition: 'Asthma' }
+    'nlee_patient': [
+        { date: '2023-06-20', time: '2:00 PM', doctor: 'Dr. Brown', reason: 'Consultation' }
     ],
-    rmartinez_patient: [
-        { date: '2023-03-12', condition: 'Anemia' }
+    'rmartinez_patient': [
+        { date: '2023-07-25', time: '11:00 AM', doctor: 'Dr. Green', reason: 'Checkup' }
     ]
 };
 
-const prescriptionsData = {
-    kthompson_patient: [
-        { name: 'Lisinopril', dosage: '10 mg', frequency: 'Daily' },
-        { name: 'Metformin', dosage: '500 mg', frequency: 'Twice a day' }
+const prescriptions = {
+    'kthompson_patient': [
+        { name: 'Lisinopril', dosage: '10 mg', frequency: 'Daily' }
     ],
-    nlee_patient: [
-        { name: 'Albuterol', dosage: '2 puffs', frequency: 'As needed' }
+    'nlee_patient': [
+        { name: 'Metformin', dosage: '500 mg', frequency: 'Twice daily' }
     ],
-    rmartinez_patient: [
-        { name: 'Iron Supplement', dosage: '100 mg', frequency: 'Daily' }
+    'rmartinez_patient': [
+        { name: 'Ibuprofen', dosage: '200 mg', frequency: 'As needed' }
     ]
 };
 
-const appointmentsData = {
-    kthompson_patient: [
-        { date: '2023-04-10', time: '10:00 AM', doctor: 'Dr. Smith', reason: 'Follow-up' }
+const billing = {
+    'kthompson_patient': [
+        { chargeFor: 'Consultation', totalCharge: 150, chargeDate: '2023-04-10', paidOff: false }
     ],
-    nlee_patient: [
-        { date: '2023-05-15', time: '2:00 PM', doctor: 'Dr. Adams', reason: 'Check-up' }
+    'nlee_patient': [
+        { chargeFor: 'Blood Test', totalCharge: 80, chargeDate: '2023-03-15', paidOff: true }
     ],
-    rmartinez_patient: [
-        { date: '2023-06-20', time: '11:00 AM', doctor: 'Dr. Brown', reason: 'Consultation' }
+    'rmartinez_patient': [
+        { chargeFor: 'X-Ray', totalCharge: 200, chargeDate: '2023-02-20', paidOff: false }
     ]
 };
 
-const billingData = {
-    kthompson_patient: [
-        { chargeFor: 'Consultation', totalCharge: 150, chargeDate: '2023-03-20', paidOff: false }
-    ],
-    nlee_patient: [
-        { chargeFor: 'Check-up', totalCharge: 200, chargeDate: '2023-04-10', paidOff: true }
-    ],
-    rmartinez_patient: [
-        { chargeFor: 'Consultation', totalCharge: 300, chargeDate: '2023-05-05', paidOff: false }
-    ]
-};
-
-// Define route for upcoming appointments
+// Route for fetching upcoming appointments by username
 router.get('/appointments/:username', (req, res) => {
     const username = req.params.username;
-    const appointments = appointmentsData[username] || [];
-    res.json(appointments);
+    res.json(appointments[username] || []);
 });
 
-// Define route for prescriptions
+// Route for fetching prescriptions by username
 router.get('/prescriptions/:username', (req, res) => {
     const username = req.params.username;
-    const prescriptions = prescriptionsData[username] || [];
-    res.json(prescriptions);
+    res.json(prescriptions[username] || []);
 });
 
-// Define route for billing information
+// Route for fetching billing information by username
 router.get('/billing/:username', (req, res) => {
     const username = req.params.username;
-    const billing = billingData[username] || [];
-    res.json(billing);
-});
-
-// Define route for medical history
-router.get('/medicalHistory/:username', (req, res) => {
-    const username = req.params.username;
-    const history = medicalHistoryData[username] || [];
-    res.json(history);
+    res.json(billing[username] || []);
 });
 
 module.exports = router;

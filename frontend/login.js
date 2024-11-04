@@ -11,7 +11,6 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
     // fetch url for localhost: http://localhost:8080/login
     try {
         const response = await fetch('https://clinic-website.azurewebsites.net/login', {
-
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
