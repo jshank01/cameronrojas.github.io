@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Function to load medical history
 function loadMedicalHistory() {
-    fetch('/api/patient/medicalHistory')
+    fetch('https://clinic-website.azurewebsites.net/api/patient/medicalHistory')
         .then(response => response.json())
         .then(data => {
             let content = '';
@@ -35,7 +35,7 @@ function loadMedicalHistory() {
 
 // Function to load prescriptions
 function loadPrescriptions() {
-    fetch('/api/patient/prescriptions')
+    fetch('https://clinic-website.azurewebsites.net/api/patient/prescriptions')
         .then(response => response.json())
         .then(data => {
             let content = '';
@@ -55,7 +55,7 @@ function loadPrescriptions() {
 
 // Function to load allergies
 function loadAllergies() {
-    fetch('/api/patient/allergies')
+    fetch('https://clinic-website.azurewebsites.net/api/patient/allergies')
         .then(response => response.json())
         .then(data => {
             let content = '';
@@ -76,7 +76,7 @@ function loadAllergies() {
 
 // Function to load immunizations
 function loadImmunizations() {
-    fetch('/api/patient/immunizations')
+    fetch('https://clinic-website.azurewebsites.net/api/patient/immunizations')
         .then(response => response.json())
         .then(data => {
             let content = '';
@@ -96,7 +96,7 @@ function loadImmunizations() {
 
 // Function to load past surgeries
 function loadSurgeries() {
-    fetch('/api/patient/surgeries')
+    fetch('https://clinic-website.azurewebsites.net/api/patient/surgeries')
         .then(response => response.json())
         .then(data => {
             let content = '';
@@ -117,7 +117,7 @@ function loadSurgeries() {
 
 // Function to load upcoming appointments
 function loadAppointments() {
-    fetch('/api/patient/appointments')
+    fetch('https://clinic-website.azurewebsites.net/api/patient/appointments')
         .then(response => response.json())
         .then(data => {
             let content = '';
@@ -138,7 +138,7 @@ function loadAppointments() {
 
 // Function to load billing information
 function loadBillingInfo() {
-    fetch('/api/patient/billing')
+    fetch('https://clinic-website.azurewebsites.net/api/patient/billing')
         .then(response => response.json())
         .then(data => {
             let content = '';
