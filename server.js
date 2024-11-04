@@ -42,7 +42,11 @@ app.use('/login', loginRoute);
 const registerRoute = require('./backend/routerFiles/registerRoute');
 app.use('/register', registerRoute);
 
-// Optional: Serve other static assets from root if needed (like root-level CSS or JS)
+// Import and use the patientRoute
+const patientRoute = require('./backend/routerFiles/patientRoute');
+app.use('/api/patient', patientRoute); // Prefix patient routes with /api/patient
+
+// Serve other static assets from root if needed (like root-level CSS or JS)
 app.use(express.static(path.join(__dirname)));
 
 // Set the port for Azure or default to 8080
