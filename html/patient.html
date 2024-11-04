@@ -3,69 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Dashboard</title>
+    <title>Patient Profile</title>
     <link rel="stylesheet" href="../styles.css">
+    <style>
+        .section {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            display: none; /* Initially hidden */
+        }
+        .section.active {
+            display: block; /* Show when active */
+        }
+        .toggle-button {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
+            background: none;
+            border: none;
+            font-size: 16px;
+        }
+        .toggle-button:focus {
+            outline: none;
+        }
+    </style>
 </head>
 <body>
     <div class="navbar">
         <a href="../index.html">Home</a>
-        <a href="doctor.html">Doctor Dashboard</a>
-        <a href="nurse.html">Nurse Dashboard</a>
-        <a href="receptionist.html">Receptionist Dashboard</a>
-        <a href="patient.html">Patient Dashboard</a>
         <a href="../index.html">Logout</a>
     </div>
-
     <div class="dashboard">
-        <h1>Patient Dashboard</h1>
-        <p>Welcome! Here you can view your medical history, prescriptions, allergies, upcoming appointments, billing information, and more.</p>
+        <h1>Patient Profile</h1>
 
-        <!-- Medical History Section -->
-        <section id="medical-history">
-            <h2>Medical History</h2>
-            <div id="medicalHistoryContent"></div>
-        </section>
-
-        <!-- Prescriptions Section -->
-        <section id="prescriptions">
-            <h2>Prescriptions</h2>
-            <div id="prescriptionContent"></div>
-        </section>
-
-        <!-- Allergies Section -->
-        <section id="allergies">
-            <h2>Allergies</h2>
-            <div id="allergyContent"></div>
-        </section>
-
-        <!-- Immunizations Section -->
-        <section id="immunizations">
-            <h2>Immunizations</h2>
-            <div id="immunizationContent"></div>
-        </section>
-
-        <!-- Surgeries Section -->
-        <section id="surgeries">
-            <h2>Past Surgeries</h2>
-            <div id="surgeryContent"></div>
-        </section>
-
-        <!-- Upcoming Appointments Section -->
-        <section id="upcoming-appointments">
+        <!-- Upcoming Appointments (shown by default) -->
+        <section id="upcoming-appointments" class="section active">
             <h2>Upcoming Appointments</h2>
-            <div id="appointmentContent"></div>
+            <div id="appointmentContent">Loading upcoming appointments...</div>
         </section>
 
-        <!-- Billing Information Section -->
-        <section id="billing-info">
+        <!-- Toggle buttons to expand/collapse other sections -->
+        <button class="toggle-button" onclick="toggleSection('prescriptions')">Prescriptions</button>
+        <section id="prescriptions" class="section">
+            <h2>Prescriptions</h2>
+            <div id="prescriptionContent">No prescriptions found.</div>
+        </section>
+
+        <button class="toggle-button" onclick="toggleSection('billing-info')">Billing Information</button>
+        <section id="billing-info" class="section">
             <h2>Billing Information</h2>
-            <div id="billingContent"></div>
+            <div id="billingContent">No billing information found.</div>
         </section>
 
-        <!-- Logout Button -->
-        <button id="logoutButton">Logout</button>
+        <!-- Add more sections as needed, following the same structure -->
     </div>
 
-    <script src="../frontend/patient.js"></script>
+    <script src="../frontend/patient_profile.js"></script>
 </body>
 </html>
