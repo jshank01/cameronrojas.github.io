@@ -484,3 +484,5 @@ VALUES ('temp_username', 'temp_pass', 'doctor'),
 ('kthompson_patient', 'patient1', 'patient'),
 ('nlee_patient', 'patient2', 'patient'),
 ('rmartinez_patient', 'patient3', 'patient');
+
+COMMIT;
