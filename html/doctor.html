@@ -3,135 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Dashboard</title>
+    <title>Doctor Profile</title>
     <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
-    <h2>Doctor Dashboard</h2>
+    <div class="dashboard">
+        <h1>Doctor Profile</h1>
 
-    <div id="doctor-info" class="section">
-        <h3>Doctor Information</h3>
-        <p><strong>Name:</strong> <span id="doctor-name"></span></p>
-        <p><strong>Specialization:</strong> <span id="doctor-specialization"></span></p>
-        <p><strong>Contact:</strong> <span id="doctor-contact"></span></p>
+        <!-- Logout Button -->
+        <button id="logoutButton">Logout</button>
+
+        <!-- Doctor Information Section -->
+        <section id="doctor-info" class="section active">
+            <h2>Doctor Information</h2>
+            <p><strong>Name:</strong> <span id="doctor-name"></span></p>
+            <p><strong>Specialization:</strong> <span id="doctor-specialization"></span></p>
+            <p><strong>Contact:</strong> <span id="doctor-contact"></span></p>
+        </section>
+
+        <!-- Toggle buttons to expand/collapse other sections -->
+        <button class="toggle-button" data-section="patients-section">Patients</button>
+        <section id="patients-section" class="section">
+            <h2>Patients</h2>
+            <table id="patients-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Contact</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+
+        <button class="toggle-button" data-section="appointments-section">Appointments</button>
+        <section id="appointments-section" class="section">
+            <h2>Appointments</h2>
+            <table id="appointments-table">
+                <thead>
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+
+        <button class="toggle-button" data-section="medical-records-section">Medical Records</button>
+        <section id="medical-records-section" class="section">
+            <h2>Medical Records</h2>
+            <input type="number" id="patient-id-input" placeholder="Enter Patient ID">
+            <button onclick="fetchMedicalRecords()">View Records</button>
+            <table id="medical-records-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Diagnosis</th>
+                        <th>Treatment</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
     </div>
 
-    <div id="patients-section" class="section">
-        <h3>Patients</h3>
-        <table id="patients-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Contact</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <div id="appointments-section" class="section">
-        <h3>Appointments</h3>
-        <table id="appointments-table">
-            <thead>
-                <tr>
-                    <th>Patient ID</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Reason</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <div id="medical-records-section" class="section">
-        <h3>Medical Records</h3>
-        <input type="number" id="patient-id-input" placeholder="Enter Patient ID">
-        <button onclick="fetchMedicalRecords()">View Records</button>
-        <table id="medical-records-table">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Diagnosis</th>
-                    <th>Treatment</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <p id="error-message" style="color: red;"></p>
-
-    <script>
-        const doctorId = sessionStorage.getItem('doctorId') || '1';
-
-        async function fetchDoctorData() {
-            try {
-                const response = await fetch(`/doctor/${doctorId}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    document.getElementById('doctor-name').innerText = data.name || 'N/A';
-                    document.getElementById('doctor-specialization').innerText = data.specialization || 'N/A';
-                    document.getElementById('doctor-contact').innerText = data.contact || 'N/A';
-                }
-            } catch (error) {
-                document.getElementById('error-message').innerText = "Error loading doctor information.";
-            }
-        }
-
-        async function fetchPatients() {
-            try {
-                const response = await fetch(`/doctorActions/patients`);
-                const patients = await response.json();
-                const tableBody = document.getElementById('patients-table').querySelector('tbody');
-                tableBody.innerHTML = '';
-                patients.forEach(patient => {
-                    const row = `<tr><td>${patient.id}</td><td>${patient.name}</td><td>${patient.contact}</td></tr>`;
-                    tableBody.innerHTML += row;
-                });
-            } catch (error) {
-                document.getElementById('error-message').innerText = "Error loading patients.";
-            }
-        }
-
-        async function fetchAppointments() {
-            try {
-                const response = await fetch(`/doctorActions/appointments/${doctorId}`);
-                const appointments = await response.json();
-                const tableBody = document.getElementById('appointments-table').querySelector('tbody');
-                tableBody.innerHTML = '';
-                appointments.forEach(appointment => {
-                    const row = `<tr><td>${appointment.patient_id}</td><td>${appointment.date}</td><td>${appointment.time}</td><td>${appointment.reason}</td></tr>`;
-                    tableBody.innerHTML += row;
-                });
-            } catch (error) {
-                document.getElementById('error-message').innerText = "Error loading appointments.";
-            }
-        }
-
-        async function fetchMedicalRecords() {
-            const patientId = document.getElementById('patient-id-input').value;
-            if (!patientId) return alert("Please enter a patient ID.");
-            try {
-                const response = await fetch(`/doctorActions/medicalRecords/${patientId}`);
-                const records = await response.json();
-                const tableBody = document.getElementById('medical-records-table').querySelector('tbody');
-                tableBody.innerHTML = '';
-                records.forEach(record => {
-                    const row = `<tr><td>${record.date}</td><td>${record.diagnosis}</td><td>${record.treatment}</td><td>${record.notes}</td></tr>`;
-                    tableBody.innerHTML += row;
-                });
-            } catch (error) {
-                document.getElementById('error-message').innerText = "Error loading medical records.";
-            }
-        }
-
-        // Initialize data
-        fetchDoctorData();
-        fetchPatients();
-        fetchAppointments();
-    </script>
+    <script src="../frontend/doctor.js"></script>
 </body>
 </html>
