@@ -35,7 +35,7 @@ app.use('/html', express.static(path.join(__dirname, 'html')));
 
 // Serve static files from the 'frontend' folder (for client-side JavaScript, CSS, etc.)
 app.use('/frontend', express.static(path.join(__dirname, 'frontend')));
-/*
+
 // Import and use backend routes from the 'routerFiles' folder
 const loginRoute = require('./backend/routerFiles/loginRoute');
 app.use('/login', loginRoute);
@@ -46,8 +46,12 @@ app.use('/register', registerRoute);
 // Import and use the patientRoute
 const patientRoute = require('./backend/routerFiles/patientRoute');
 app.use('/api/patient', patientRoute); // Prefix patient routes with /api/patient
-*/
 
+// Explicitly add the doctor route
+const doctorRoute = require('./backend/routerFiles/doctorRoute');
+app.use('/api/doctor', doctorRoute); // Prefix doctor routes with /api/doctor
+
+/*
 // Load all route files from the 'routerFiles' folder
 const routerPath = path.join(__dirname, 'backend', 'routerFiles');
 fs.readdirSync(routerPath).forEach(file => {
@@ -58,7 +62,7 @@ fs.readdirSync(routerPath).forEach(file => {
         app.use(`/api/${routeName.toLowerCase()}`, route);
     }
 });
-
+*/
 
 // Serve other static assets from root if needed (like root-level CSS or JS)
 app.use(express.static(path.join(__dirname)));
