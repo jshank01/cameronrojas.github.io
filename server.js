@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const express = require('express');
 const path = require('path');
 const app = express();
+const fs = require('fs');
 
 app.use(helmet()); // Adds security headers
 app.use(bodyParser.json());
@@ -34,7 +35,7 @@ app.use('/html', express.static(path.join(__dirname, 'html')));
 
 // Serve static files from the 'frontend' folder (for client-side JavaScript, CSS, etc.)
 app.use('/frontend', express.static(path.join(__dirname, 'frontend')));
-
+/*
 // Import and use backend routes from the 'routerFiles' folder
 const loginRoute = require('./backend/routerFiles/loginRoute');
 app.use('/login', loginRoute);
@@ -45,6 +46,17 @@ app.use('/register', registerRoute);
 // Import and use the patientRoute
 const patientRoute = require('./backend/routerFiles/patientRoute');
 app.use('/api/patient', patientRoute); // Prefix patient routes with /api/patient
+*/
+
+// Load all route files from the 'routerFiles' folder
+const routerPath = path.join(__dirname, 'backend', 'routerFiles');
+fs.readdirSync(routerPath).forEach(file => {
+    if (file.endsWith('.js')) {
+        const route = require(`./backend/routerFiles/${file}`);
+        const routeName = file.replace('Route.js', ''); // This will remove 'Route.js' from the file name
+        app.use(`/api/${routeName.toLowerCase()}`, route); // Prefix each route with /api/ + route name
+    }
+});
 
 // Serve other static assets from root if needed (like root-level CSS or JS)
 app.use(express.static(path.join(__dirname)));
