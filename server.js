@@ -52,11 +52,13 @@ app.use('/api/patient', patientRoute); // Prefix patient routes with /api/patien
 const routerPath = path.join(__dirname, 'backend', 'routerFiles');
 fs.readdirSync(routerPath).forEach(file => {
     if (file.endsWith('.js')) {
+        console.log(`Loading route file: ${file}`);
         const route = require(`./backend/routerFiles/${file}`);
-        const routeName = file.replace('Route.js', ''); // This will remove 'Route.js' from the file name
-        app.use(`/api/${routeName.toLowerCase()}`, route); // Prefix each route with /api/ + route name
+        const routeName = file.replace('Route.js', '');
+        app.use(`/api/${routeName.toLowerCase()}`, route);
     }
 });
+
 
 // Serve other static assets from root if needed (like root-level CSS or JS)
 app.use(express.static(path.join(__dirname)));
