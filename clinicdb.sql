@@ -467,6 +467,66 @@ VALUES (1, 'kthompson_patient', 'Kyle', 'Thompson', '1995-04-12', '321 Maple St,
 (2, 'nlee_patient', 'Nancy', 'Lee', '1988-07-22', '654 Cedar St, Houston, TX', '8321114321', '345678901'),
 (3, 'rmartinez_patient', 'Ricardo', 'Martinez', '1993-09-30', '987 Birch St, Houston, TX', '7134551234', '567890123');
 
+-- APPOINTMENTS DUMMY INFO
+INSERT INTO Appointments (P_ID, date, time, doctor, reason)
+VALUES 
+    (1, '2023-05-15', '10:00 AM', 'Dr. Smith', 'Follow-up'),
+    (2, '2023-06-10', '02:00 PM', 'Dr. Johnson', 'Check-up');
+
+-- BILLING DUMMY INFO
+INSERT INTO Billing (P_ID, chargeFor, totalCharge, chargeDate, paidOff)
+VALUES 
+    (1, 'Consultation', 150, '2023-04-10', FALSE),
+    (2, 'Lab Test', 200, '2023-05-15', TRUE);
+
+-- PAYMENT DUMMY INFO
+INSERT INTO Payment (P_ID, total_paid, pay_date, pay_towards)
+VALUES 
+    (1, 150, '2023-04-15', '2023-04-10'),
+    (2, 200, '2023-05-18', '2023-05-15');
+
+-- REFERRALS DUMMY INFO
+INSERT INTO Referral (primary_doc, P_ID, ref_date, experiation, specialist, doc_appr, used)
+VALUES 
+    ('123456789', 1, '2023-04-01', '2023-06-01', '987654321', TRUE, FALSE),
+    ('234567890', 2, '2023-05-01', '2023-07-01', '876543210', FALSE, TRUE);
+
+-- MEDICATIONS DUMMY INFO
+INSERT INTO Medication (medicine, start_date, end_date, dosage, time_of_day, D_ID, P_ID, cost)
+VALUES 
+    ('Aspirin', '2023-01-01', '2023-03-01', '100mg', 'Morning', '123456789', 1, 20),
+    ('Ibuprofen', '2023-02-15', NULL, '200mg', 'Evening', '234567890', 2, 15);
+
+-- ALLERGIES DUMMY INFO
+INSERT INTO Allergies (allergy, P_ID, start_date, end_date, seasonal)
+VALUES 
+    ('Peanuts', 1, '2022-03-01', NULL, FALSE),
+    ('Pollen', 2, '2022-04-01', '2023-04-01', TRUE);
+
+-- ILLNESSES DUMMY INFO
+INSERT INTO Illness (ailment, P_ID, start_date, end_date)
+VALUES 
+    ('Hypertension', 1, '2021-01-01', NULL),
+    ('Diabetes', 2, '2020-05-01', '2023-02-01');
+
+-- SURGERIES DUMMY INFO
+INSERT INTO Surgery (procedure_done, P_ID, body_part, surgery_date, cost)
+VALUES 
+    ('Appendectomy', 1, 'Abdomen', '2022-10-15', 5000),
+    ('Knee Replacement', 2, 'Knee', '2023-03-20', 12000);
+
+-- IMMUNIZATIONS DUMMY INFO
+INSERT INTO Immunization (vaccine, P_ID, vax_date, cost)
+VALUES 
+    ('Flu Shot', 1, '2023-09-15', 30),
+    ('Covid-19', 2, '2023-01-10', 50);
+
+-- MEDICAL HISTORY DUMMY INFO
+INSERT INTO Med_History (P_ID, last_visit, height, weight, blood_pressure)
+VALUES 
+    (1, '2023-05-01', 170, 70, '120/80'),
+    (2, '2023-05-10', 165, 75, '130/85');
+
 -- LOGIN DUMMY INFO
 INSERT INTO Users(username, password, role) 
 VALUES ('temp_username', 'temp_pass', 'doctor'),
