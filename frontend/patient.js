@@ -4,56 +4,258 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (username) {
         loadUpcomingAppointments(username);
+        loadBillingInfo(username);
+        loadPaymentInfo(username);
+        loadReferrals(username);
+        loadMedications(username);
+        loadAllergies(username);
+        loadIllnesses(username);
+        loadSurgeries(username);
+        loadImmunizations(username);
+        loadMedicalHistory(username);
     } else {
         console.error("No username provided in URL");
         document.getElementById('appointmentContent').innerHTML = 'Username is missing from the URL.';
-        return;
+        return; // Exit if no username
     }
 
     // Attach event listeners for toggle buttons
     document.querySelectorAll('.toggle-button').forEach(button => {
         button.addEventListener('click', () => {
-            const sectionId = button.getAttribute('data-section');
-            toggleSection(sectionId, button, username);
+            const section = button.getAttribute('data-section');
+            toggleSection(section);
         });
     });
 
-    // Logout button
-    document.getElementById('logoutButton').addEventListener('click', () => {
-        window.location.href = '../index.html';
-    });
+    // Event listener for logout button
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            window.location.href = '../index.html'; // Redirects to the home or login page
+        });
+    }
 });
 
-function toggleSection(sectionId, button, username) {
+// Toggle the visibility of a section
+function toggleSection(sectionId) {
     const section = document.getElementById(sectionId);
     section.classList.toggle('active');
-    button.textContent = section.classList.contains('active') ? `- ${button.textContent.slice(2)}` : `+ ${button.textContent.slice(2)}`;
-
-    // Load data based on section
-    switch(sectionId) {
-        case 'prescriptions': loadPrescriptions(username); break;
-        case 'billing-info': loadBillingInfo(username); break;
-        case 'payment': loadPayment(username); break;
-        case 'referrals': loadReferrals(username); break;
-        case 'medications': loadMedications(username); break;
-        case 'allergies': loadAllergies(username); break;
-        case 'illnesses': loadIllnesses(username); break;
-        case 'surgeries': loadSurgeries(username); break;
-        case 'immunizations': loadImmunizations(username); break;
-        case 'med-history': loadMedHistory(username); break;
-    }
 }
 
-function loadUpcomingAppointments(username) { /* Existing function for appointments */ }
-function loadPrescriptions(username) { /* Existing function for prescriptions */ }
-function loadBillingInfo(username) { /* Existing function for billing */ }
+// Function to load upcoming appointments
+function loadUpcomingAppointments(username) {
+    fetch(`/api/patient/appointments/${username}`)
+        .then(response => response.json())
+        .then(data => {
+            let content = '';
+            data.forEach(appointment => {
+                content += `<p>Date: ${appointment.date}</p>`;
+                content += `<p>Time: ${appointment.time}</p>`;
+                content += `<p>Doctor: ${appointment.doctor}</p>`;
+                content += `<p>Reason: ${appointment.reason}</p>`;
+                content += `<hr>`;
+            });
+            document.getElementById('appointmentContent').innerHTML = content || 'No upcoming appointments found.';
+        })
+        .catch(error => {
+            console.error('Error loading upcoming appointments:', error);
+            document.getElementById('appointmentContent').innerHTML = 'Error loading upcoming appointments.';
+        });
+}
 
-// New functions for additional sections
-function loadPayment(username) { /* Fetch and display payment data */ }
-function loadReferrals(username) { /* Fetch and display referral data */ }
-function loadMedications(username) { /* Fetch and display medication data */ }
-function loadAllergies(username) { /* Fetch and display allergy data */ }
-function loadIllnesses(username) { /* Fetch and display illness data */ }
-function loadSurgeries(username) { /* Fetch and display surgery data */ }
-function loadImmunizations(username) { /* Fetch and display immunization data */ }
-function loadMedHistory(username) { /* Fetch and display medical history data */ }
+// Function to load billing information
+function loadBillingInfo(username) {
+    fetch(`/api/patient/billing/${username}`)
+        .then(response => response.json())
+        .then(data => {
+            let content = '';
+            data.forEach(bill => {
+                content += `<p>Charge For: ${bill.chargeFor}</p>`;
+                content += `<p>Total Charge: $${bill.totalCharge}</p>`;
+                content += `<p>Charge Date: ${bill.chargeDate}</p>`;
+                content += `<p>Paid Off: ${bill.paidOff ? 'Yes' : 'No'}</p>`;
+                content += `<hr>`;
+            });
+            document.getElementById('billingContent').innerHTML = content || 'No billing information found.';
+        })
+        .catch(error => {
+            console.error('Error loading billing information:', error);
+            document.getElementById('billingContent').innerHTML = 'Error loading billing information.';
+        });
+}
+
+// Function to load payment information and show "Pay Here" button if payment is due
+function loadPaymentInfo(username) {
+    fetch(`/api/patient/payments/${username}`)
+        .then(response => response.json())
+        .then(data => {
+            let content = '';
+            let paymentDue = false;
+            data.forEach(payment => {
+                content += `<p>Total Paid: $${payment.total_paid}</p>`;
+                content += `<p>Pay Date: ${payment.pay_date}</p>`;
+                content += `<p>Pay Towards: ${payment.pay_towards}</p>`;
+                content += `<hr>`;
+                if (!payment.paid) paymentDue = true;
+            });
+            document.getElementById('paymentContent').innerHTML = content || 'No payment records found.';
+            
+            // Enable "Pay Here" button if payment is due
+            const payHereButton = document.getElementById('payHereButton');
+            if (paymentDue) {
+                payHereButton.classList.add('active');
+                payHereButton.addEventListener('click', () => {
+                    alert('Payment processing...');
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error loading payment information:', error);
+            document.getElementById('paymentContent').innerHTML = 'Error loading payment information.';
+        });
+}
+
+// Function to load referrals
+function loadReferrals(username) {
+    fetch(`/api/patient/referrals/${username}`)
+        .then(response => response.json())
+        .then(data => {
+            let content = '';
+            data.forEach(referral => {
+                content += `<p>Primary Doctor: ${referral.primary_doc}</p>`;
+                content += `<p>Specialist: ${referral.specialist}</p>`;
+                content += `<p>Referral Date: ${referral.ref_date}</p>`;
+                content += `<p>Expiration: ${referral.experiation}</p>`;
+                content += `<hr>`;
+            });
+            document.getElementById('referralContent').innerHTML = content || 'No referrals found.';
+        })
+        .catch(error => {
+            console.error('Error loading referrals:', error);
+            document.getElementById('referralContent').innerHTML = 'Error loading referrals.';
+        });
+}
+
+// Additional functions for each section, similar to the above
+
+// Function to load medications
+function loadMedications(username) {
+    fetch(`/api/patient/medications/${username}`)
+        .then(response => response.json())
+        .then(data => {
+            let content = '';
+            data.forEach(med => {
+                content += `<p>Medicine: ${med.medicine}</p>`;
+                content += `<p>Dosage: ${med.dosage}</p>`;
+                content += `<p>Start Date: ${med.start_date}</p>`;
+                content += `<p>End Date: ${med.end_date}</p>`;
+                content += `<hr>`;
+            });
+            document.getElementById('medicationContent').innerHTML = content || 'No medications found.';
+        })
+        .catch(error => {
+            console.error('Error loading medications:', error);
+            document.getElementById('medicationContent').innerHTML = 'Error loading medications.';
+        });
+}
+
+// Function to load allergies
+function loadAllergies(username) {
+    fetch(`/api/patient/allergies/${username}`)
+        .then(response => response.json())
+        .then(data => {
+            let content = '';
+            data.forEach(allergy => {
+                content += `<p>Allergy: ${allergy.allergy}</p>`;
+                content += `<p>Start Date: ${allergy.start_date}</p>`;
+                content += `<hr>`;
+            });
+            document.getElementById('allergyContent').innerHTML = content || 'No allergies found.';
+        })
+        .catch(error => {
+            console.error('Error loading allergies:', error);
+            document.getElementById('allergyContent').innerHTML = 'Error loading allergies.';
+        });
+}
+
+// Function to load illnesses
+function loadIllnesses(username) {
+    fetch(`/api/patient/illnesses/${username}`)
+        .then(response => response.json())
+        .then(data => {
+            let content = '';
+            data.forEach(illness => {
+                content += `<p>Ailment: ${illness.ailment}</p>`;
+                content += `<p>Start Date: ${illness.start_date}</p>`;
+                content += `<hr>`;
+            });
+            document.getElementById('illnessContent').innerHTML = content || 'No illnesses found.';
+        })
+        .catch(error => {
+            console.error('Error loading illnesses:', error);
+            document.getElementById('illnessContent').innerHTML = 'Error loading illnesses.';
+        });
+}
+
+// Function to load surgeries
+function loadSurgeries(username) {
+    fetch(`/api/patient/surgeries/${username}`)
+        .then(response => response.json())
+        .then(data => {
+            let content = '';
+            data.forEach(surgery => {
+                content += `<p>Procedure Done: ${surgery.procedure_done}</p>`;
+                content += `<p>Body Part: ${surgery.body_part}</p>`;
+                content += `<p>Surgery Date: ${surgery.surgery_date}</p>`;
+                content += `<p>Cost: $${surgery.cost}</p>`;
+                content += `<hr>`;
+            });
+            document.getElementById('surgeryContent').innerHTML = content || 'No surgeries found.';
+        })
+        .catch(error => {
+            console.error('Error loading surgeries:', error);
+            document.getElementById('surgeryContent').innerHTML = 'Error loading surgeries.';
+        });
+}
+
+// Function to load immunizations
+function loadImmunizations(username) {
+    fetch(`/api/patient/immunizations/${username}`)
+        .then(response => response.json())
+        .then(data => {
+            let content = '';
+            data.forEach(immunization => {
+                content += `<p>Vaccine: ${immunization.vaccine}</p>`;
+                content += `<p>Vaccine Date: ${immunization.vax_date}</p>`;
+                content += `<p>Cost: $${immunization.cost}</p>`;
+                content += `<hr>`;
+            });
+            document.getElementById('immunizationContent').innerHTML = content || 'No immunizations found.';
+        })
+        .catch(error => {
+            console.error('Error loading immunizations:', error);
+            document.getElementById('immunizationContent').innerHTML = 'Error loading immunizations.';
+        });
+}
+
+// Function to load medical history
+function loadMedicalHistory(username) {
+    fetch(`/api/patient/medicalHistory/${username}`)
+        .then(response => response.json())
+        .then(data => {
+            let content = '';
+            data.forEach(record => {
+                content += `<p>Last Visit: ${record.last_visit}</p>`;
+                content += `<p>Height: ${record.height} cm</p>`;
+                content += `<p>Weight: ${record.weight} kg</p>`;
+                content += `<p>Blood Pressure: ${record.blood_pressure}</p>`;
+                content += `<hr>`;
+            });
+            document.getElementById('medicalHistoryContent').innerHTML = content || 'No medical history found.';
+        })
+        .catch(error => {
+            console.error('Error loading medical history:', error);
+            document.getElementById('medicalHistoryContent').innerHTML = 'Error loading medical history.';
+        });
+}
+

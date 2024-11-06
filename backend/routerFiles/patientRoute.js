@@ -2,20 +2,19 @@ const express = require('express');
 const router = express.Router();
 
 // Mock or Database Retrieval Functions
-// Example function to simulate database retrieval for new sections
-function getPaymentData(username) { /* Mock data or database query for Payment */ }
-function getReferralData(username) { /* Mock data or database query for Referral */ }
-function getMedicationData(username) { /* Mock data or database query for Medication */ }
-function getAllergyData(username) { /* Mock data or database query for Allergies */ }
-function getIllnessData(username) { /* Mock data or database query for Illness */ }
-function getSurgeryData(username) { /* Mock data or database query for Surgery */ }
-function getImmunizationData(username) { /* Mock data or database query for Immunization */ }
-function getMedHistoryData(username) { /* Mock data or database query for Med_History */ }
+function getPaymentData(username) { /* Unique data for each patient */ }
+function getReferralData(username) { /* Unique data for each patient */ }
+function getMedicationData(username) { /* Unique data for each patient */ }
+function getAllergyData(username) { /* Unique data for each patient */ }
+function getIllnessData(username) { /* Unique data for each patient */ }
+function getSurgeryData(username) { /* Unique data for each patient */ }
+function getImmunizationData(username) { /* Unique data for each patient */ }
+function getMedHistoryData(username) { /* Unique data for each patient */ }
 
 // Routes for each section
-router.get('/appointments/:username', (req, res) => { /* Existing route for appointments */ });
-router.get('/prescriptions/:username', (req, res) => { /* Existing route for prescriptions */ });
-router.get('/billing/:username', (req, res) => { /* Existing route for billing */ });
+router.get('/appointments/:username', (req, res) => { /* Existing route */ });
+router.get('/prescriptions/:username', (req, res) => { /* Existing route */ });
+router.get('/billing/:username', (req, res) => { /* Existing route */ });
 
 // New routes for additional sections
 router.get('/payment/:username', (req, res) => res.json(getPaymentData(req.params.username)));
