@@ -431,11 +431,33 @@ CREATE TABLE Logs (
 -- create view where receptionist can see current appts for specific doctor
 -- need to add login info (username, password, security lvl/role)
 
+-- LOGIN DUMMY INFO
+INSERT INTO Users(username, password, role) 
+VALUES ('temp_username', 'temp_pass', 'doctor'),
+('asmith', 'doctor2', 'doctor'),
+('bjohnson', 'doctor3', 'doctor'),
+('cwhite', 'doctor4', 'doctor'),
+('dlee', 'doctor5', 'doctor'),
+('mgarcia_nurse', 'nurse1', 'nurse'),
+('kchan_nurse', 'nurse2', 'nurse'),
+('ljohnson_nurse', 'nurse3', 'nurse'),
+('jwilson_rec', 'receptionist1', 'receptionist'),
+('mrodriguez_rec', 'receptionist2', 'receptionist'),
+('tlee_rec', 'receptionist3', 'receptionist'),
+('big_boss', 'admin1', 'admin'),
+('kthompson_patient', 'patient1', 'patient'),
+('nlee_patient', 'patient2', 'patient'),
+('rmartinez_patient', 'patient3', 'patient');
+
 -- OFFICE DUMMY INFO
 INSERT INTO Office (office_id, location, admin_id, admin_start_date) 
 VALUES (1, '1010 Main St, Houston, TX', '111111111', '2023-01-15'),
 (2, '2020 West Loop N, Houston, TX', '111111111', '2022-05-22'),
 (3, '3030 Fannin St, Houston, TX', '111111111', '2023-03-10');
+
+-- ADMIN DUMMY INFO 
+INSERT INTO Admin (employee_ssn, username, first_name, last_name, hire_date, salary, office_id) 
+VALUES ('111111111', 'big_boss', 'Mr.', 'Boss', '2021-08-15', 175000, 1);
 
 -- DOCTOR DUMMY INFO
 INSERT INTO Doctor (employee_ssn, username, Admin_ssn, first_name, last_name, hire_date, salary, office_id, specialty, specialist, cost) 
@@ -457,10 +479,6 @@ VALUES ('901234567', 'jwilson_rec', '111111111', 'John', 'Wilson', '2023-05-10',
 ('012345678', 'mrodriguez_rec', '111111111', 'Maria', 'Rodriguez', '2022-12-01', 52000, 2),
 ('123456780', 'tlee_rec', '111111111', 'Tina', 'Lee', '2024-03-15', 48000, 3);
 
--- ADMIN DUMMY INFO 
-INSERT INTO Admin (employee_ssn, username, first_name, last_name, hire_date, salary, office_id) 
-VALUES ('111111111', 'big_boss', 'Mr.', 'Boss', '2021-08-15', 175000, 1);
-
 -- PATIENT DUMMY INFO
 INSERT INTO Patient (patient_id, username, first_name, last_name, date_of_birth, address, phone_number, primary_id) 
 VALUES (1, 'kthompson_patient', 'Kyle', 'Thompson', '1995-04-12', '321 Maple St, Houston, TX', '2817894567', '234567890'),
@@ -468,81 +486,74 @@ VALUES (1, 'kthompson_patient', 'Kyle', 'Thompson', '1995-04-12', '321 Maple St,
 (3, 'rmartinez_patient', 'Ricardo', 'Martinez', '1993-09-30', '987 Birch St, Houston, TX', '7134551234', '567890123');
 
 -- APPOINTMENTS DUMMY INFO
-INSERT INTO Appointments (P_ID, date, time, doctor, reason)
+INSERT INTO Appointment (app_date, P_ID, app_start_time, app_end_time, D_ID, reason_for_visit, referral, need_referral)
 VALUES 
-    (1, '2023-05-15', '10:00 AM', 'Dr. Smith', 'Follow-up'),
-    (2, '2023-06-10', '02:00 PM', 'Dr. Johnson', 'Check-up');
+    ('2023-05-15', 1, '10:00:00', '10:30:00', '123456789', 'Follow-up', NULL, FALSE),
+    ('2023-06-10', 2, '14:00:00', '14:30:00', '234567890', 'Check-up', NULL, TRUE),
+    ('2023-07-20', 3, '09:00:00', '09:45:00', '345678901', 'Routine Consultation', NULL, FALSE);
 
 -- BILLING DUMMY INFO
-INSERT INTO Billing (P_ID, chargeFor, totalCharge, chargeDate, paidOff)
+INSERT INTO Billing (P_ID, D_ID, charge_for, total_charge, charge_date, paid_off, paid_total)
 VALUES 
-    (1, 'Consultation', 150, '2023-04-10', FALSE),
-    (2, 'Lab Test', 200, '2023-05-15', TRUE);
+    (1, '123456789', 'Consultation', 150, '2023-04-10', FALSE, 0),
+    (2, '234567890', 'Lab Test', 200, '2023-05-15', TRUE, 200),
+    (3, '345678901', 'Follow-up', 100, '2023-06-20', FALSE, 50);
 
 -- PAYMENT DUMMY INFO
 INSERT INTO Payment (P_ID, total_paid, pay_date, pay_towards)
 VALUES 
-    (1, 150, '2023-04-15', '2023-04-10'),
-    (2, 200, '2023-05-18', '2023-05-15');
+    (1, 75, '2023-04-15', '2023-04-10'),
+    (2, 200, '2023-05-18', '2023-05-15'),
+    (3, 50, '2023-06-25', '2023-06-20');
 
 -- REFERRALS DUMMY INFO
 INSERT INTO Referral (primary_doc, P_ID, ref_date, experiation, specialist, doc_appr, used)
 VALUES 
-    ('123456789', 1, '2023-04-01', '2023-06-01', '987654321', TRUE, FALSE),
-    ('234567890', 2, '2023-05-01', '2023-07-01', '876543210', FALSE, TRUE);
+    ('123456789', 1, '2023-04-01', '2023-06-01', '345678901', TRUE, FALSE),
+    ('234567890', 2, '2023-05-01', '2023-07-01', '456789012', FALSE, TRUE),
+    ('345678901', 3, '2023-06-01', '2023-08-01', '567890123', TRUE, TRUE);
 
 -- MEDICATIONS DUMMY INFO
 INSERT INTO Medication (medicine, start_date, end_date, dosage, time_of_day, D_ID, P_ID, cost)
 VALUES 
-    ('Aspirin', '2023-01-01', '2023-03-01', '100mg', 'Morning', '123456789', 1, 20),
-    ('Ibuprofen', '2023-02-15', NULL, '200mg', 'Evening', '234567890', 2, 15);
+    ('Amoxicillin', '2023-01-10', '2023-01-20', '500mg', 'Morning', '123456789', 1, 30),
+    ('Lisinopril', '2023-02-15', NULL, '10mg', 'Evening', '234567890', 2, 25),
+    ('Metformin', '2023-03-01', NULL, '500mg', 'Morning', '345678901', 3, 20);
+
 
 -- ALLERGIES DUMMY INFO
 INSERT INTO Allergies (allergy, P_ID, start_date, end_date, seasonal)
 VALUES 
     ('Peanuts', 1, '2022-03-01', NULL, FALSE),
-    ('Pollen', 2, '2022-04-01', '2023-04-01', TRUE);
+    ('Pollen', 2, '2022-04-01', '2023-04-01', TRUE),
+    ('Dust', 3, '2021-05-10', NULL, FALSE);
 
 -- ILLNESSES DUMMY INFO
 INSERT INTO Illness (ailment, P_ID, start_date, end_date)
 VALUES 
     ('Hypertension', 1, '2021-01-01', NULL),
-    ('Diabetes', 2, '2020-05-01', '2023-02-01');
+    ('Diabetes', 2, '2020-05-01', '2023-02-01'),
+    ('Asthma', 3, '2019-10-15', NULL);
 
 -- SURGERIES DUMMY INFO
 INSERT INTO Surgery (procedure_done, P_ID, body_part, surgery_date, cost)
 VALUES 
     ('Appendectomy', 1, 'Abdomen', '2022-10-15', 5000),
-    ('Knee Replacement', 2, 'Knee', '2023-03-20', 12000);
+    ('Knee Replacement', 2, 'Knee', '2023-03-20', 12000),
+    ('Cataract Surgery', 3, 'Eye', '2023-05-15', 7000);
 
 -- IMMUNIZATIONS DUMMY INFO
 INSERT INTO Immunization (vaccine, P_ID, vax_date, cost)
 VALUES 
     ('Flu Shot', 1, '2023-09-15', 30),
-    ('Covid-19', 2, '2023-01-10', 50);
+    ('Covid-19', 2, '2023-01-10', 50),
+    ('Hepatitis B', 3, '2023-04-22', 45);
 
 -- MEDICAL HISTORY DUMMY INFO
 INSERT INTO Med_History (P_ID, last_visit, height, weight, blood_pressure)
 VALUES 
     (1, '2023-05-01', 170, 70, '120/80'),
-    (2, '2023-05-10', 165, 75, '130/85');
-
--- LOGIN DUMMY INFO
-INSERT INTO Users(username, password, role) 
-VALUES ('temp_username', 'temp_pass', 'doctor'),
-('asmith', 'doctor2', 'doctor'),
-('bjohnson', 'doctor3', 'doctor'),
-('cwhite', 'doctor4', 'doctor'),
-('dlee', 'doctor5', 'doctor'),
-('mgarcia_nurse', 'nurse1', 'nurse'),
-('kchan_nurse', 'nurse2', 'nurse'),
-('ljohnson_nurse', 'nurse3', 'nurse'),
-('jwilson_rec', 'receptionist1', 'receptionist'),
-('mrodriguez_rec', 'receptionist2', 'receptionist'),
-('tlee_rec', 'receptionist3', 'receptionist'),
-('big_boss', 'admin1', 'admin'),
-('kthompson_patient', 'patient1', 'patient'),
-('nlee_patient', 'patient2', 'patient'),
-('rmartinez_patient', 'patient3', 'patient');
+    (2, '2023-05-10', 165, 75, '130/85'),
+    (3, '2023-04-20', 160, 68, '125/82');
 
 COMMIT;
