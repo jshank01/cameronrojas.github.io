@@ -64,4 +64,28 @@ router.get('/doctorActions/medicalRecords/:patientId', async (req, res) => {
     }
 });
 
+// Route to add a new doctor
+router.post('/doctorActions/add', async (req, res) => {
+    const { first_name, last_name, phone_number, ssn, specialty, office_id } = req.body;
+
+    // Validate the input
+    if (!first_name || !last_name || !phone_number || !ssn || !specialty || !office_id) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    try {
+        // Insert the new doctor into the database
+        const result = await db.query(`
+            INSERT INTO Doctor (first_name, last_name, phone_number, ssn, specialty, office_id)
+            VALUES (?, ?, ?, ?, ?, ?)`, 
+            [first_name, last_name, phone_number, ssn, specialty, office_id]);
+
+        // Respond with success
+        res.status(201).json({ message: 'Doctor added successfully', doctorId: result.insertId });
+    } catch (error) {
+        console.error('Error adding doctor:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 module.exports = router;

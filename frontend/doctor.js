@@ -22,18 +22,53 @@ function toggleSection(sectionId) {
     section.classList.toggle('active');
 }
 
-async function fetchDoctorData(doctorId) {
+async function fetchDoctorData() {
     try {
-        const response = await fetch(`/doctor/${doctorId}`);
-        if (response.ok) {
-            const data = await response.json();
-            document.getElementById('doctor-name').innerText = data.name || 'N/A';
-            document.getElementById('doctor-specialization').innerText = data.specialization || 'N/A';
-            document.getElementById('doctor-contact').innerText = data.contact || 'N/A';
-        }
+        const response = await fetch(`/doctorActions/doctors`);
+        const doctors = await response.json();
+        const tableBody = document.getElementById('doctors-table').querySelector('tbody');
+        tableBody.innerHTML = ''; // Clear existing rows
+        
+        doctors.forEach(doctor => {
+            const row = document.createElement('tr');
+            row.dataset.doctorId = doctor.id; // Store doctor ID for front-end-only deletion
+            
+            row.innerHTML = `
+                <td>${doctor.firstName}</td>
+                <td>${doctor.lastName}</td>
+                <td>${doctor.specialty}</td>
+                <td>${doctor.salary}</td>
+                <td>${doctor.officeId}</td>
+                <td>
+                    <button onclick="editDoctor(${doctor.id})" class="edit-btn">Edit</button>
+                    <button onclick="deleteDoctor(${doctor.id})" class="delete-btn">Delete</button>
+                </td>
+            `;
+            
+            tableBody.appendChild(row);
+        });
     } catch (error) {
-        console.error("Error loading doctor information:", error);
+        console.error("Error loading doctors:", error);
     }
+}
+
+function editDoctor(doctorId) {
+    // Logic to edit a doctor (e.g., open an edit form or redirect to edit page)
+    console.log("Edit doctor:", doctorId);
+}
+
+function deleteDoctor(doctorId) {
+    // Find and remove the row from the table without affecting the database
+    const tableBody = document.getElementById('doctors-table').querySelector('tbody');
+    const rows = tableBody.querySelectorAll('tr');
+    
+    rows.forEach(row => {
+        if (row.dataset.doctorId == doctorId) {
+            tableBody.removeChild(row); // Remove the row from the table
+        }
+    });
+    
+    console.log("Deleted doctor from front end only:", doctorId);
 }
 
 async function fetchPatients() {
