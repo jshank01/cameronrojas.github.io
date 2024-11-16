@@ -22,11 +22,9 @@
         <div class="header">
             <h2>Doctor Schedule</h2>
             <div class="controls">
-                <select id="doctor-select">
-                    <option value="">Select Doctor</option>
-                    <option value="doctor1">Doctor 1</option>
-                    <option value="doctor2">Doctor 2</option>
-                    <!-- Add more doctor options here -->
+                <select id="doctorDropdown">
+                    <option value="">Select a Doctor</option>
+                    <!-- Doctors will be populated here -->
                 </select>
                 <input type="date" id="appointment-date">
                 <button onclick="fetchAppointments()">View Schedule</button>

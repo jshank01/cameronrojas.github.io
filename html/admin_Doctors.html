@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Doctors</title>
     <link rel="stylesheet" href="../styles.css">
-    <script src="js/doctorActions.js" defer></script> <!-- Separate JavaScript file for actions -->
+    <script src="../frontend/doctor.js" defer></script> <!-- Separate JavaScript file for actions -->
 </head>
 <body>
     <!-- Navbar -->
@@ -19,10 +19,11 @@
         <a href="../index.html">Logout</a>
     </div>
     
-        <!-- Main Content for Doctors Management -->
+    <!-- Main Content for Doctors Management -->
     <div class="main-content">
-            <!-- Doctors Table -->
         <h2>Manage Doctors</h2>
+        
+        <!-- Doctors Table -->
         <table id="doctors-table">
             <thead>
                 <tr>
@@ -35,26 +36,27 @@
                 </tr>
             </thead>
             <tbody>
-                    <!-- Rows will be dynamically populated with JavaScript -->
-                <tr>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>Cardiology</td>
-                    <td>$120,000</td>
-                    <td>1</td>
-                    <td>
-                            <!-- Buttons for Edit and Delete -->
-                        <div class="button-group">
-                            <button onclick="window.location.href='addDoctor.html'" class="add-doctor-btn">Add Doctor</button>
-                            <button class="edit-btn">Edit</button>
-                            <button class="delete-btn">Delete</button>
-                        </div>
-                    </td>
-                </tr>
-                    <!-- Additional rows can be populated here -->
+                <!-- Rows will be dynamically populated with JavaScript -->
             </tbody>
         </table>
-    </div>
+
+        <!-- Appointments Section (will be shown on button click) -->
+        <section id="appointments-section" class="table-section" display="none">
+            <h3>Past Appointments</h3>
+            <table id="appointments-table">
+                <thead>
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Appointments will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </section>
     </div>
 </body>
 </html>

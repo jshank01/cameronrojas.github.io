@@ -29,29 +29,29 @@
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Account Creation Date</th>
-                    <th>Medical History</th>
+                    <th>Medicine</th> <!-- Changed from Medical History to Medicine -->
                     <th>Appointments</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Example row - dynamic population will replace these hardcoded rows -->
-                <tr>
+                <tr data-patient-id="1">
                     <td>John</td>
                     <td>Doe</td>
-                    <td>2023-05-15</td>
+                    <td>2023-01-15</td>
                     <td>
-                        <button onclick="window.location.href='medicalHistory.html?patientId=1'" class="history-btn">View History</button>
+                        <button onclick="showMedicine(1)" class="medicine-btn">Medicine</button> <!-- Medicine button -->
                     </td>
                     <td>
-                        <button onclick="window.location.href='appointmentsHistory.html?patientId=1'" class="appointments-btn">View Appointments</button>
+                        <button onclick="showAppointments(1)" class="appointments-btn">Past Appointments</button>
                     </td>
                     <td>
-                        <button class="edit-btn">Edit</button>
-                        <button class="delete-btn">Delete</button>
+                        <button onclick="editPatient(1)" class="edit-btn">Edit</button>
+                        <button onclick="deletePatient(1)" class="delete-btn">Delete</button>
                     </td>
                 </tr>
-                <!-- Additional rows can be added here -->
+                <!-- Additional rows will be added dynamically -->
             </tbody>
         </table>
     </div>

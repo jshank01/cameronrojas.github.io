@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  <!-- Add Chart.js -->
 </head>
 <body>
     <div class="navbar">
@@ -19,7 +20,124 @@
     <div class="dashboard">
         <h1>Admin Dashboard</h1>
         <p>Welcome, Admin! Here you can manage employees, view clinic operations, and oversee other administrative functions.</p>
+        
+        <!-- Report Type Selection -->
+        <label for="reportType">Select Report Type:</label>
+        <select id="reportType" onchange="resetInputs()">
+            <option value="referralReport">Referral Report</option>
+            <option value="salaryVsBillingReport">Doctor Salary vs Billing</option>
+        </select>
+
+        <!-- Date Range Selection -->
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate">
+        
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate">
+        
+        <button onclick="generateReport()">Generate Report</button>
+        
+        <!-- Canvas for the Reports -->
+        <h2 id="reportTitle">Referral Count by Doctor</h2>
+        <canvas id="reportChart"></canvas> <!-- Canvas for displaying the report graph -->
+        
         <button onclick="window.location.href='../index.html'">Logout</button>
     </div>
+
+    <script>
+        // Function to reset inputs based on report type selection
+        function resetInputs() {
+            const reportType = document.getElementById('reportType').value;
+            const reportTitle = document.getElementById('reportTitle');
+
+            if (reportType === 'referralReport') {
+                reportTitle.textContent = 'Referral Count by Doctor';
+            } else if (reportType === 'salaryVsBillingReport') {
+                reportTitle.textContent = 'Doctor Salary vs Billing';
+            }
+        }
+
+        // Generate report based on selected type and date range
+        function generateReport() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const reportType = document.getElementById('reportType').value;
+
+            if (!startDate || !endDate) {
+                alert("Please select both start and end dates.");
+                return;
+            }
+
+            // Determine the appropriate endpoint and fetch the data
+            let url = '';
+            if (reportType === 'referralReport') {
+                url = `/referral-report-by-doctor?startDate=${startDate}&endDate=${endDate}`;
+            } else if (reportType === 'salaryVsBillingReport') {
+                url = `/salary-vs-billing-report?startDate=${startDate}&endDate=${endDate}`;
+            }
+
+            // Fetch data based on the selected report
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Prepare the data for the graph
+                    let chartData = {};
+
+                    if (reportType === 'referralReport') {
+                        const doctorNames = data.map(item => item.doctorName);
+                        const referralCounts = data.map(item => item.referralCount);
+                        chartData = {
+                            labels: doctorNames,
+                            datasets: [{
+                                label: 'Referral Count',
+                                data: referralCounts,
+                                backgroundColor: '#4CAF50',
+                                borderColor: '#388E3C',
+                                borderWidth: 1
+                            }]
+                        };
+                    } else if (reportType === 'salaryVsBillingReport') {
+                        const doctorNames = data.map(item => item.doctorName);
+                        const salaries = data.map(item => item.salary);
+                        const billings = data.map(item => item.billingAmount);
+                        chartData = {
+                            labels: doctorNames,
+                            datasets: [
+                                {
+                                    label: 'Salary',
+                                    data: salaries,
+                                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                    borderWidth: 1
+                                },
+                                {
+                                    label: 'Billing Amount',
+                                    data: billings,
+                                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                    borderWidth: 1
+                                }
+                            ]
+                        };
+                    }
+
+                    // Create the chart based on the selected report
+                    const ctx = document.getElementById('reportChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: reportType === 'referralReport' ? 'bar' : 'scatter', // Bar for referrals, scatter for salary vs billing
+                        data: chartData,
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching report:', error));
+        }
+    </script>
 </body>
 </html>
